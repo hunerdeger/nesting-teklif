@@ -131,6 +131,42 @@ tr.noprice input[data-f=price]{border-color:#e9a948;background:#fff8ec}
 .logobox img{max-width:110px;max-height:44px;display:block}
 .logo img{max-width:34px;max-height:34px;display:block;border-radius:6px;background:#fff}
 .qdoc .qlogo{max-height:52px;max-width:180px;display:block;margin-bottom:8px}
+.qbar{display:none}
+.cards{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.pcard{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;display:grid;gap:10px;min-width:0;grid-template-columns:minmax(0,1fr)}
+.pcard.noprice input[data-f=price]{border-color:#e9a948;background:#fff8ec}
+.pc-top{display:flex;align-items:center;gap:10px}
+.pc-top input{flex:1;min-width:0;font-weight:600}
+.pc-top .thumb{flex:none}
+.pc-mid{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pc-dim{display:flex;align-items:center;gap:6px;font-weight:600;font-variant-numeric:tabular-nums}
+.pc-dim input{width:78px!important}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex:none}
+.stepper button{width:40px;height:40px;border:0;background:var(--soft);color:var(--acc2);font-size:20px;font-weight:700;cursor:pointer}
+.stepper input{width:48px!important;height:40px;border:0;border-radius:0;text-align:center;font-weight:700;padding:0;background:#fff}
+.pcard select{width:100%}
+.pc-more summary{font-size:12.5px;color:var(--mut);cursor:pointer;list-style:none}
+.pc-more summary::before{content:"▸ ";color:var(--acc)}
+.pc-more[open] summary::before{content:"▾ "}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px}
+.mgrid label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.2px}
+.mgrid input,.mgrid select{width:100%!important;font-size:15px}
+@media (max-width:700px){
+ input,select,textarea{font-size:16px}
+ .hwrap{padding:10px 14px}
+ nav{position:fixed;left:0;right:0;bottom:0;z-index:40;margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:var(--hd1);justify-content:space-around;gap:2px;box-shadow:0 -6px 24px -10px rgba(0,0,0,.4)}
+ nav button{flex:1;flex-direction:column;gap:3px;padding:6px 2px;font-size:11.5px;border-radius:12px;justify-content:center}
+ nav button .n{width:24px;height:24px}
+ .qbar{display:flex;position:fixed;left:10px;right:10px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:39;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 16px;box-shadow:0 12px 30px -12px rgba(16,24,40,.35)}
+ .qbar b{display:block;font-size:18px;font-variant-numeric:tabular-nums;color:var(--acc2)}
+ .qbar span{font-size:12px;color:var(--mut)}
+ main{padding-bottom:170px!important}
+ .toast{bottom:calc(140px + env(safe-area-inset-bottom))}
+ #addForm .fld{flex:1 1 calc(50% - 6px)}
+ #addForm .fld:first-child,#addForm .fld:nth-child(5){flex-basis:100%}
+ #addForm button[type=submit]{flex:1 1 100%;padding:12px}
+ .drop{padding:12px}.drop .ico{display:none}
+}
 /* teklif belgesi */
 .qdoc{font-family:Inter,system-ui,sans-serif;color:#13202c;padding:30px;font-size:13px;line-height:1.5;background:#fff}
 .qdoc .qh{display:flex;justify-content:space-between;gap:16px;padding-bottom:16px;margin-bottom:18px;flex-wrap:wrap;border-bottom:3px solid var(--qa,#0b6fa8)}
@@ -290,6 +326,7 @@ tr.noprice input[data-f=price]{border-color:#e9a948;background:#fff8ec}
   </div>
 </section>
 </main>
+<div class="qbar" id="qbar"><div><b id="qbTotal">—</b><span id="qbSub"></span></div><button class="btn pri" id="qbPdf">Teklif PDF</button></div>
 
 <div class="overlay" id="impOv"><div class="modal" id="impBox"></div></div>
 <div class="toast" id="toast"></div>
@@ -490,7 +527,8 @@ function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.parts&
 function migrate(s){for(const p of s.parts){if(!p.rotMode)p.rotMode=p.rot===false?'fixed':'mat';delete p.rot;delete p._rot;}for(const m of s.materials)if(!m.grain)m.grain='free';s.extras=s.extras||[];if(!s.settings.theme)s.settings.theme='auto';return s;}
 let S=load()||sampleState(),R=null,dirty=true;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-function changed(){dirty=true;save();}
+function changed(){dirty=true;save();qbarSoon();}
+let qbT=null;function qbarSoon(){clearTimeout(qbT);qbT=setTimeout(updQbar,250);}
 const matById=id=>S.materials.find(m=>m.id===id);
 const matLabel=m=>m?`${m.name} ${fmt(m.t,m.t%1?1:0)} mm · ${m.w}×${m.h}`:'— seçilmedi —';
 const THEMES={marine:{name:'Yat projesi',h:200,r:26,s:58,acc:'#0b6fa8',soft:'#e3f1fa',chip:'linear-gradient(135deg,#5fb3e6,#0b6fa8)'},wood:{name:'Mobilya projesi',h:30,r:18,s:46,acc:'#94602f',soft:'#f6ece0',chip:'linear-gradient(135deg,#d9a46c,#7a4a22)'},neutral:{name:'Karma proje',h:212,r:18,s:22,acc:'#3d6a96',soft:'#ebf1f7',chip:'linear-gradient(135deg,#fff,#9aa8b8)'}};
@@ -516,11 +554,26 @@ function hue(s){let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;re
 /* ---------- PARÇALAR ---------- */
 $('#chkArea').onchange=e=>{S.settings.showArea=e.target.checked;save();renderParts();};
 function partCountTxt(){const tot=S.parts.reduce((s,p)=>s+(+p.qty||0),0);$('#partCount').textContent=`${S.parts.length} kalem · ${tot} adet`;}
+const MQ=window.matchMedia('(max-width:700px)');const isMob=()=>MQ.matches;
+try{MQ.addEventListener('change',()=>{renderParts();renderMats();});}catch(_){}
+function partCards(){return`<div class="cards">${S.parts.map(p=>`<div class="pcard">
+  <div class="pc-top">${thumbSVG(p)}<input type="text" data-c="parts" data-id="${p.id}" data-f="name" value="${esc(p.name)}"><button class="btn del" data-delpart="${p.id}" aria-label="Sil">✕</button></div>
+  <div class="pc-mid">${p.loops?`<div class="pc-dim">${fmt(p.w,0)} × ${fmt(p.h,0)} mm<span class="muted small"> · eğri</span></div>`:`<div class="pc-dim"><input type="number" inputmode="decimal" min="1" step="any" data-c="parts" data-id="${p.id}" data-f="w" value="${p.w}"><span>×</span><input type="number" inputmode="decimal" min="1" step="any" data-c="parts" data-id="${p.id}" data-f="h" value="${p.h}"></div>`}
+   <div class="stepper"><button data-step="${p.id}|-1" aria-label="azalt">−</button><input type="number" inputmode="numeric" min="0" step="1" data-c="parts" data-id="${p.id}" data-f="qty" value="${p.qty}"><button data-step="${p.id}|1" aria-label="arttır">+</button></div></div>
+  <select data-c="parts" data-id="${p.id}" data-f="mat">${matById(p.mat)?'':'<option value="">— malzeme seç —</option>'}${matOpts(p.mat)}</select>
+  <details class="pc-more"><summary><span id="rx-${p.id}">${rotHint(p)}</span></summary><div class="row" style="margin-top:8px;flex-wrap:nowrap"><select data-c="parts" data-id="${p.id}" data-f="rotMode" style="flex:1">${ROT_OPTS.map(([v,t])=>`<option value="${v}"${(p.rotMode||'mat')===v?' selected':''}>${t}</option>`).join('')}</select><button class="btn sm" data-rot90="${p.id}">⟲ 90°</button></div></details>
+ </div>`).join('')}</div>`;}
+function matCards(){const c=CUR[S.settings.currency];return`<div class="cards">${S.materials.map(m=>`<div class="pcard${+m.price?'':' noprice'}">
+  <div class="pc-top"><span class="pill cat-${matCat(m)}">${CAT_NAME[matCat(m)]}</span><input type="text" data-c="materials" data-id="${m.id}" data-f="name" value="${esc(m.name)}"><button class="btn del" data-delmat="${m.id}" aria-label="Sil">✕</button></div>
+  <div class="mgrid">${[['t','Kalınlık mm'],['w','En mm'],['h','Boy mm'],['price','Plaka '+c],['cut','Kesim '+c+'/m']].map(([f,l])=>`<label><span>${l}</span><input type="number" inputmode="decimal" min="0" step="any" data-c="materials" data-id="${m.id}" data-f="${f}" value="${m[f]}"></label>`).join('')}</div>
+  <details class="pc-more"><summary>${m.grain==='grain'?'Suyuna kesilir':'Serbest kesim'} · ${CAT_NAME[matCat(m)]}</summary><div class="mgrid" style="margin-top:8px"><label><span>Kesim yönü</span><select data-c="materials" data-id="${m.id}" data-f="grain"><option value="free"${m.grain!=='grain'?' selected':''}>Serbest</option><option value="grain"${m.grain==='grain'?' selected':''}>Suyuna</option></select></label><label><span>Kullanım</span><select data-c="materials" data-id="${m.id}" data-f="cat"><option value="auto"${!m.cat||m.cat==='auto'?' selected':''}>Otomatik</option>${['yat','mobilya','diger'].map(k=>`<option value="${k}"${m.cat===k?' selected':''}>${CAT_NAME[k]}</option>`).join('')}</select></label></div></details>
+ </div>`).join('')}</div>`;}
 function renderParts(){
   $('#aM').innerHTML=matOpts($('#aM').value||S.materials[0]?.id);
   $('#sampleNote').classList.toggle('hide',!S.sample);
   partCountTxt();$('#chkArea').checked=!!S.settings.showArea;
   if(!S.parts.length){$('#partsTbl').innerHTML='<p class="muted">Henüz parça yok. DXF yükle ya da elle ekle.</p>';return;}
+  if(isMob()){$('#partsTbl').innerHTML=partCards();return;}
   $('#partsTbl').innerHTML=`<div class="tbl"><table><thead><tr><th></th><th>Parça</th><th class="num">En × Boy (mm)</th>${S.settings.showArea?'<th class="num">Alan (m²)</th>':''}<th>Adet</th><th>Malzeme / kalınlık</th><th>Döndürme</th><th></th></tr></thead><tbody>${
     S.parts.map(p=>`<tr><td>${thumbSVG(p)}</td><td><input type="text" data-c="parts" data-id="${p.id}" data-f="name" value="${esc(p.name)}">${p.loops?`<div class="muted small">serbest şekil${p.layer?' · katman: '+esc(p.layer):''}</div>`:''}</td>
     <td class="num" style="white-space:nowrap">${p.loops?`${fmt(p.w,1)} × ${fmt(p.h,1)}`:`<input type="number" min="1" step="any" data-c="parts" data-id="${p.id}" data-f="w" value="${p.w}" style="width:70px"> × <input type="number" min="1" step="any" data-c="parts" data-id="${p.id}" data-f="h" value="${p.h}" style="width:70px">`}</td>
@@ -551,7 +604,8 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.s){S.settings[t.dataset.s]=t.type==='number'?(t.value===''?0:+t.value):t.value;changed();if(t.dataset.s==='currency'){renderMats();}if(cur==='teklif'||cur==='yerlesim'||t.dataset.s==='theme')refresh('x');else applyTheme();}
 });
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.s&&(t.tagName==='TEXTAREA'||t.type==='text'||!t.type)){S.settings[t.dataset.s]=t.value;save();if(cur==='teklif')renderQuote();}});
-document.addEventListener('click',e=>{const t=e.target.closest('[data-delpart],[data-delmat],[data-delx],[data-rot90]');if(!t)return;
+document.addEventListener('click',e=>{const st0=e.target.closest('[data-step]');if(st0){const[id,d]=st0.dataset.step.split('|'),p=S.parts.find(x=>x.id===id);if(p){p.qty=Math.max(0,(+p.qty||0)+(+d));const inp=st0.parentElement.querySelector('input');if(inp)inp.value=p.qty;S.sample=false;changed();partCountTxt();}return;}
+  const t=e.target.closest('[data-delpart],[data-delmat],[data-delx],[data-rot90]');if(!t)return;
   if(t.dataset.rot90){const p=S.parts.find(x=>x.id===t.dataset.rot90);if(p){rot90(p);S.sample=false;changed();renderParts();}return;}
   if(t.dataset.delpart){S.parts=S.parts.filter(p=>p.id!==t.dataset.delpart);changed();renderParts();}
   if(t.dataset.delmat){const used=S.parts.some(p=>p.mat===t.dataset.delmat);if(used&&!t.dataset.arm){t.dataset.arm=1;t.textContent='Parçalarda kullanılıyor, yine de sil?';return;}S.materials=S.materials.filter(m=>m.id!==t.dataset.delmat);changed();renderMats();renderParts();}
@@ -559,6 +613,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-delpart],[
 
 /* ---------- MALZEMELER ---------- */
 function renderMats(){
+  if(isMob()&&S.materials.length){$('#matTbl').innerHTML=matCards();return;}
   $('#matTbl').innerHTML=S.materials.length?`<div class="tbl"><table><thead><tr><th>Malzeme</th><th>Kalınlık (mm)</th><th>Plaka en (mm)</th><th>Plaka boy (mm)</th><th>Plaka fiyatı (${CUR[S.settings.currency]})</th><th>Kesim (${CUR[S.settings.currency]}/m)</th><th>Kesim yönü</th><th>Kullanım</th><th></th></tr></thead><tbody>${
     S.materials.map(m=>`<tr class="${+m.price?'':'noprice'}"><td><input type="text" data-c="materials" data-id="${m.id}" data-f="name" value="${esc(m.name)}"></td>
     ${['t','w','h','price','cut'].map(f=>`<td><input type="number" min="0" step="any" data-c="materials" data-id="${m.id}" data-f="${f}" value="${m[f]}"></td>`).join('')}
@@ -852,6 +907,10 @@ $('#impOv').addEventListener('click',e=>{if(e.target.id==='impOv')closeImp();});
 $('#btnSaveProj').onclick=()=>saveFile(`${fileSafe(S.settings.project||'nesting_proje')||'nesting_proje'}.json`,JSON.stringify(S));
 $('#fileProj').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const s=JSON.parse(await f.text());if(!s.parts||!s.materials)throw 0;S=migrate(s);changed();refresh('all');toast('Proje açıldı.');}catch(err){toast('Bu dosya bir proje dosyası değil.');}});
 
+/* ---------- telefon alt şeridi ---------- */
+function updQbar(){try{const q=computeQuote();$('#qbTotal').textContent=money(q.total);$('#qbSub').textContent=`${q.sheets} plaka · ${q.nParts} parça`;}catch(_){}}
+$('#qbPdf').onclick=()=>$('#btnPdf').click();
+
 /* ---------- logo ---------- */
 function renderLogo(){const L=S.settings.logo;$('#logoBox').innerHTML=L?`<img src="${L}" alt="logo">`:'logo yok';$('#btnLogoDel').classList.toggle('hide',!L);
   const bl=$('#brandLogo');if(L){bl.innerHTML=`<img src="${L}" alt="">`;bl.style.background='#fff';}else if(bl.dataset.svg){bl.innerHTML=bl.dataset.svg;bl.style.background='';}}
@@ -884,7 +943,7 @@ function refresh(kind){S.extras=S.extras||[];applyTheme();
 }
 $('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){try{history.replaceState(null,'','#'+b.dataset.tab);}catch(_){location.hash=b.dataset.tab;}show(b.dataset.tab);}});
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
-show(location.hash.slice(1)||'parcalar');
+show(location.hash.slice(1)||'parcalar');updQbar();
 setTimeout(initDL,0);setTimeout(()=>{if(!DL)initDL();},1500);
 </script>
 </body>
