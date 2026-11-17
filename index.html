@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nesting & Teklif</title>
+<meta name="theme-color" content="#062a43">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nesting">
+<meta name="description" content="Plaka yerleşimi (nesting), malzeme hesabı ve fiyat teklifi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme=neutral]{--bg:#f4f5f7;--bg2:#e7ebf0;--surface:#fff;--ink:#17212c;--mut:#6a7787;--line:#e3e7ec;--acc:#3d6a96;--acc2:#2c5078;--soft:#ebf1f7;--hd1:#18212b;--hd2:#3a4857;--tab:#aab8c7;--sheet:#f7f6f2;--sheetLine:#b9b3a6;--warn:#a85a07;--bad:#b42318;--ok:#157f3d}
+[data-theme=marine]{--bg:#f0f6fb;--bg2:#dceaf5;--line:#dbe6ef;--ink:#0f2233;--mut:#5b6f82;--acc:#0b6fa8;--acc2:#08527e;--soft:#e3f1fa;--hd1:#03203a;--hd2:#0b5585;--tab:#9cc6e3;--sheet:#f6f9fc;--sheetLine:#9fb7c9}
+[data-theme=wood]{--bg:#f8f4ef;--bg2:#efe4d6;--line:#e9dfd2;--ink:#2a1f16;--mut:#7e6c5c;--acc:#94602f;--acc2:#734820;--soft:#f6ece0;--hd1:#2b1b0e;--hd2:#6a4425;--tab:#dcc5aa;--sheet:#f4e7d3;--sheetLine:#b8996f}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,var(--bg2) 0,var(--bg) 360px) no-repeat,var(--bg);color:var(--ink);font-size:14px;line-height:1.5;transition:background-color .5s,color .5s;-webkit-font-smoothing:antialiased}
+header{background:linear-gradient(120deg,var(--hd1),var(--hd2));color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 8px 30px -12px rgba(0,0,0,.35);transition:background .5s}
+.hwrap{max-width:1240px;margin:0 auto;padding:14px 18px 12px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.12);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.bt{font-weight:700;font-size:17px;letter-spacing:-.2px;line-height:1.1}
+.bs{font-size:12px;color:var(--tab);margin-top:2px}
+.themechip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:99px;padding:6px 12px 6px 8px;font-size:12.5px;font-weight:600;white-space:nowrap;backdrop-filter:blur(6px)}
+.themechip i{width:18px;height:18px;border-radius:99px;display:block;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
+nav{display:flex;gap:6px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid transparent;color:var(--tab);padding:7px 14px 7px 8px;font:inherit;font-weight:600;cursor:pointer;border-radius:99px;white-space:nowrap;transition:all .2s}
+nav button .n{width:22px;height:22px;border-radius:99px;display:grid;place-items:center;font-size:11.5px;background:rgba(255,255,255,.1)}
+nav button:hover{color:#fff;background:rgba(255,255,255,.06)}
+nav button.on{color:var(--hd1);background:#fff;box-shadow:0 4px 14px -4px rgba(0,0,0,.35)}
+nav button.on .n{background:var(--acc);color:#fff}
+main{max-width:1240px;margin:0 auto;padding:22px 18px 40px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px -12px rgba(16,24,40,.08)}
+.card h2{font-size:15.5px;font-weight:650;margin:0 0 14px;letter-spacing:-.1px;display:flex;align-items:center;gap:8px}
+.card h3{font-size:14px;font-weight:650;margin:0 0 8px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld label{font-size:11.5px;color:var(--mut);font-weight:600;letter-spacing:.2px;text-transform:uppercase}
+input,select,textarea{font:inherit;color:inherit;border:1px solid var(--line);border-radius:10px;padding:8px 11px;background:#fcfdfd;min-width:0;transition:border-color .15s,box-shadow .15s}
+input:hover,select:hover,textarea:hover{border-color:color-mix(in srgb,var(--acc) 30%,var(--line))}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 20%,transparent);background:#fff}
+input[type=checkbox]{accent-color:var(--acc);width:16px;height:16px}
+input[type=number]{width:96px}
+input.w-s{width:72px} input.w-m{width:140px} input.w-l{width:230px}
+textarea{width:100%;min-height:64px;resize:vertical}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:color-mix(in srgb,var(--acc) 40%,var(--line));color:var(--acc2);background:var(--soft)}
+.btn.pri{background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 88%,#fff),var(--acc));border-color:var(--acc2);color:#fff;box-shadow:0 6px 16px -8px var(--acc)}
+.btn.pri:hover{background:var(--acc2);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:9px}
+.btn.ghost{border-color:transparent;background:none;color:var(--mut)}
+.btn.ghost:hover{background:var(--soft);color:var(--acc2)}
+.btn.del{color:var(--mut);border-color:transparent;background:none;padding:5px 8px}
+.btn.del:hover{color:var(--bad);background:#fdecea}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:11px;color:var(--mut);font-weight:650;background:color-mix(in srgb,var(--soft) 55%,#fff);white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:color-mix(in srgb,var(--soft) 45%,transparent)}
+tr:last-child td{border-bottom:0}
+td input[type=number]{width:84px} td input[type=text]{width:100%;min-width:170px}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.thumb{width:48px;height:36px;display:block}
+.muted{color:var(--mut)} .small{font-size:12px}
+.note{background:var(--soft);border:1px solid color-mix(in srgb,var(--acc) 22%,transparent);border-radius:14px;padding:12px 14px;font-size:13px}
+.warn{background:#fff7ea;border:1px solid #f1d3a6;color:#6b3d05;border-radius:12px;padding:11px 13px;font-size:13px}
+.err{background:#fdeeec;border:1px solid #f3c0b9;color:#7a1a10;border-radius:12px;padding:11px 13px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px 13px;overflow:hidden;box-shadow:0 8px 24px -14px rgba(16,24,40,.12)}
+.stat::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,var(--acc),color-mix(in srgb,var(--acc) 30%,#fff))}
+.stat b{display:block;font-size:26px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--mut);font-weight:500}
+.stat.hl{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent}
+.stat.hl span{color:rgba(255,255,255,.8)} .stat.hl::before{display:none}
+.sheets{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.sheet{border:1px solid var(--line);border-radius:14px;padding:12px;background:color-mix(in srgb,var(--soft) 35%,#fff);transition:transform .15s,box-shadow .15s}
+.sheet:hover{transform:translateY(-2px);box-shadow:0 12px 28px -14px rgba(16,24,40,.25)}
+.sheet .sh{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:8px;font-weight:500}
+.sheet .sh b{color:var(--ink)}
+.sheet svg{width:100%;height:auto;display:block;border-radius:6px;filter:drop-shadow(0 2px 4px rgba(16,24,40,.12))}
+.bar{height:5px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:9px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 50%,#fff));border-radius:9px}
+.grp{margin-bottom:26px}
+.grp-h{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:12px}
+.grp-h h3{margin:0;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--soft);color:var(--acc2);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:600}
+.pill.cat-yat{background:#e1f0fa;color:#08527e}.pill.cat-mobilya{background:#f4e8da;color:#6b4220}.pill.cat-diger{background:#eceff3;color:#4b5563}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+.split>div{min-width:0}
+.kv{width:100%;min-width:0}
+.kv td{border-bottom:1px dashed var(--line);padding:8px 4px}
+.kv tr:hover{background:none}
+.kv tr.tot td{border-top:2px solid var(--ink);border-bottom:0;font-weight:700;font-size:16px;padding-top:12px}
+.kv tr.sub td{font-weight:650}
+.overlay{position:fixed;inset:0;background:rgba(10,20,30,.45);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:28px 12px;overflow:auto}
+.overlay.on{display:flex}
+.modal{background:var(--surface);border-radius:20px;max-width:880px;width:100%;padding:22px;box-shadow:0 30px 80px -20px rgba(0,0,0,.4)}
+.modal h2{margin:0 0 6px;font-size:18px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;max-height:260px;overflow:auto;margin:12px 0;padding:2px}
+.thumbs div{border:1px solid var(--line);border-radius:10px;padding:5px;font-size:11px;text-align:center;color:var(--mut);background:#fcfdfd}
+.thumbs svg{width:100%;height:60px;display:block}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,10px);background:var(--hd1);color:#fff;padding:11px 18px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:all .25s;z-index:60;max-width:90vw;box-shadow:0 12px 30px -10px rgba(0,0,0,.4)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.hide{display:none!important}
+.qwrap{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 4px color-mix(in srgb,var(--soft) 50%,#fff)}
+.drop{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border:1.5px dashed color-mix(in srgb,var(--acc) 35%,var(--line));border-radius:14px;padding:16px;background:color-mix(in srgb,var(--soft) 45%,#fff);transition:all .2s}
+.drop.over{background:var(--soft);border-color:var(--acc)}
+.drop .ico{width:44px;height:44px;border-radius:12px;background:var(--surface);display:grid;place-items:center;box-shadow:0 4px 12px -6px rgba(16,24,40,.25);color:var(--acc)}
+.dot{width:8px;height:8px;border-radius:99px;background:var(--acc);display:inline-block}
+@media (max-width:600px){.bs{display:none}.themechip span{display:none}.themechip{padding:6px}main{padding:12px 10px 30px}.card{padding:14px;border-radius:16px}.qdoc{padding:16px!important}.row>.fld{flex:1 1 140px}.row>.fld input,.row>.fld select{width:100%}.sheets{grid-template-columns:1fr}}
+.catrow{border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:all .15s}
+.catrow.on{border-color:color-mix(in srgb,var(--acc) 45%,var(--line));background:color-mix(in srgb,var(--soft) 50%,#fff)}
+.chip{font:inherit;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);padding:4px 10px;border-radius:99px;cursor:pointer}
+.chip:hover{border-color:var(--acc)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chip.ghost{background:none;color:var(--mut);border-style:dashed}
+tr.noprice input[data-f=price]{border-color:#e9a948;background:#fff8ec}
+.logobox{width:120px;height:52px;border:1px dashed var(--line);border-radius:10px;display:grid;place-items:center;background:#fff;overflow:hidden;color:var(--mut);font-size:11px}
+.logobox img{max-width:110px;max-height:44px;display:block}
+.logo img{max-width:34px;max-height:34px;display:block;border-radius:6px;background:#fff}
+.qdoc .qlogo{max-height:52px;max-width:180px;display:block;margin-bottom:8px}
+/* teklif belgesi */
+.qdoc{font-family:Inter,system-ui,sans-serif;color:#13202c;padding:30px;font-size:13px;line-height:1.5;background:#fff}
+.qdoc .qh{display:flex;justify-content:space-between;gap:16px;padding-bottom:16px;margin-bottom:18px;flex-wrap:wrap;border-bottom:3px solid var(--qa,#0b6fa8)}
+.qdoc .qh h1{font-size:22px;margin:0;color:var(--qa,#0b6fa8);letter-spacing:1px;font-weight:700}
+.qdoc .co{font-weight:700;font-size:17px}
+.qdoc .meta{display:grid;grid-template-columns:auto auto;gap:2px 14px;font-size:12.5px}
+.qdoc .meta span:nth-child(odd){color:#5b6b7a}
+.qdoc table{width:100%;min-width:0;border-collapse:collapse;margin:10px 0 14px}
+.qdoc th{background:var(--qs,#eef5f7);color:#13202c;font-size:11px;text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:8px;border-bottom:0}
+.qdoc td{padding:8px;border-bottom:1px solid #e6eaee}
+.qdoc tr:hover{background:none}
+.qdoc .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.qdoc .tots{margin-left:auto;width:min(330px,100%)}
+.qdoc .tots td{border:0;padding:4px 8px}
+.qdoc .tots .gt td{border-top:2px solid var(--qa,#13202c);font-weight:700;font-size:16px;padding-top:9px;color:var(--qa,#13202c)}
+.qdoc .foot{margin-top:18px;font-size:12px;color:#5b6b7a;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<header><div class="hwrap">
+  <div class="top">
+    <div class="brand"><span class="logo" id="brandLogo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5" opacity=".45"/><rect x="6" y="6" width="7" height="5" rx="1"/><path d="M15 6h3v8h-3zM6 13h7l-2.5 5H6z"/></svg></span>
+      <div><div class="bt">Nesting &amp; Teklif</div><div class="bs">plaka yerleşimi · malzeme hesabı · fiyat teklifi</div></div></div>
+    <div class="themechip" id="themeChip" title="Tema, projede kullanılan malzemelere göre değişir"></div>
+  </div>
+  <nav id="tabs">
+    <button data-tab="parcalar"><span class="n">1</span>Parçalar</button>
+    <button data-tab="malzemeler"><span class="n">2</span>Malzemeler</button>
+    <button data-tab="yerlesim"><span class="n">3</span>Yerleşim</button>
+    <button data-tab="teklif"><span class="n">4</span>Teklif</button>
+  </nav>
+</div></header>
+
+<main>
+<!-- PARÇALAR -->
+<section id="v-parcalar">
+  <div id="sampleNote" class="note hide" style="margin-bottom:14px">Örnek bir proje yüklü (fiyatlar da örnek). Kendi işine başlamak için <button class="btn sm" id="btnClear">Temizle</button> de; malzemelerin ve teklif ayarların korunur.</div>
+  <div class="card">
+    <h2>Çizimden parça al (DXF)</h2>
+    <div class="drop" id="dropZone">
+      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+      <div style="flex:1;min-width:200px"><b>DXF dosyalarını buraya sürükle</b><div class="muted small">Kapalı eğriler parça, içlerindeki kapalı eğriler delik olarak alınır. Katman adına göre malzeme atanır.</div></div>
+      <label class="btn pri" for="fileDxf">Dosya seç</label>
+      <input id="fileDxf" type="file" accept=".dxf,.dwg,.3dm" multiple class="hide">
+    </div>
+    <p class="muted small" style="margin:10px 0 0">DWG / 3DM: Rhino'da parçaları seç → <b>File › Export Selected</b> → dosya türü <b>.dxf</b>. Eğriler spline olarak da gelse okunur; blok (block) kullandıysan önce <b>Explode</b> yap.</p>
+  </div>
+  <div class="card">
+    <h2>Elle dikdörtgen parça ekle</h2>
+    <form id="addForm" class="row">
+      <div class="fld"><label>Parça adı</label><input id="aName" class="w-l" placeholder="ör. Dolap yan paneli"></div>
+      <div class="fld"><label>En (mm)</label><input id="aW" type="number" min="1" step="any" required></div>
+      <div class="fld"><label>Boy (mm)</label><input id="aH" type="number" min="1" step="any" required></div>
+      <div class="fld"><label>Adet</label><input id="aQ" type="number" min="1" step="1" value="1" class="w-s"></div>
+      <div class="fld"><label>Malzeme / kalınlık</label><select id="aM"></select></div>
+      <div class="fld"><label>Döndürme</label><select id="aR"><option value="mat">Malzemeye göre</option><option value="free">Serbest</option><option value="fixed">Sabit (suyuna)</option></select></div>
+      <button class="btn pri" type="submit">Ekle</button>
+    </form>
+  </div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <h2 style="margin:0">Parça listesi <span id="partCount" class="pill"></span></h2>
+      <div class="row">
+        <label class="btn sm" for="fileProj">Projeyi aç</label><input id="fileProj" type="file" accept=".json" class="hide">
+        <button class="btn sm dlb" id="btnSaveProj">Projeyi kaydet</button>
+        <label class="row small muted" style="gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="chkArea"> Alanı göster (m²)</label>
+        <button class="btn sm ghost" id="btnClearParts">Tüm parçaları sil</button>
+      </div>
+    </div>
+    <div id="partsTbl"></div>
+    <p class="muted small" style="margin:10px 0 0"><b>Su yönü:</b> Döndürmesi sabit olan parçalarda <b>En</b> ölçüsü plakanın uzun kenarı (su yönü) boyunca yerleşir. Parçanın suyu diğer yöndeyse <b>⟲ 90°</b> ile çevir. Malzemenin varsayılanını Malzemeler sekmesindeki <b>Kesim yönü</b> belirler.</p>
+  </div>
+</section>
+
+<!-- MALZEMELER -->
+<section id="v-malzemeler" class="hide">
+  <div class="card">
+    <h2>Plaka malzemeleri</h2>
+    <p class="muted small" style="margin-top:-6px">Her satır bir malzeme + kalınlık + plaka ölçüsü. Kesim fiyatı kalınlığa göre değişebildiği için satır bazında.</p>
+    <div id="matTbl"></div>
+    <div class="row" style="margin-top:12px"><button class="btn sm pri" id="btnCat">📚 Piyasa malzemelerinden ekle</button><button class="btn sm" id="btnAddMat">+ Boş malzeme ekle</button></div>
+  </div>
+  <div class="card">
+    <h2>Yerleşim ayarları</h2>
+    <div class="row">
+      <div class="fld"><label>Plaka kenar payı (mm)</label><input type="number" min="0" step="any" data-s="margin"></div>
+      <div class="fld"><label>Parçalar arası boşluk / takım payı (mm)</label><input type="number" min="0" step="any" data-s="gap"></div>
+      <div class="fld"><label>Tema</label><select data-s="theme"><option value="auto">Malzemeye göre (otomatik)</option><option value="marine">Yat · mavi</option><option value="wood">Mobilya · kahverengi</option><option value="neutral">Nötr · beyaz/gri</option></select></div>
+      <div class="fld"><label>Para birimi</label><select data-s="currency"><option value="TRY">₺ TL</option><option value="EUR">€ Euro</option><option value="USD">$ Dolar</option></select></div>
+    </div>
+    <p class="muted small" style="margin:10px 0 0">Boşluk değerine freze çapını + güvenlik payını gir (ör. 6 mm freze için 8–10 mm).</p>
+  </div>
+</section>
+
+<!-- YERLEŞİM -->
+<section id="v-yerlesim" class="hide">
+  <div class="stats" id="nestStats"></div>
+  <div id="nestMsgs"></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <h2 style="margin:0">Plaka yerleşimleri</h2>
+      <div class="row">
+        <button class="btn sm dlb" id="btnZip">DXF indir</button>
+        <button class="btn sm pri dlb" id="btnLayPdf">Yerleşim PDF (sunum)</button>
+      </div>
+    </div>
+    <div id="nestOut"></div>
+    <p class="muted small" style="margin:12px 0 0">Bu sürümde serbest şekilli parçalar, kendilerini saran en küçük dikdörtgene göre dizilir (güvenli ama biraz daha fazla fire). Gerçek şekil yerleşimi bir sonraki sürümde.</p>
+  </div>
+</section>
+
+<!-- TEKLİF -->
+<section id="v-teklif" class="hide">
+  <div class="split">
+    <div>
+      <div class="card">
+        <h2>Teklif bilgileri</h2>
+        <div class="row">
+          <div class="fld" style="flex:1 1 100%"><label>Firma logosu</label><div class="row" style="align-items:center;gap:12px"><div class="logobox" id="logoBox"></div><label class="btn sm" for="fileLogo">Logo yükle</label><input id="fileLogo" type="file" accept="image/*" class="hide"><button class="btn sm ghost hide" id="btnLogoDel">Kaldır</button><span class="muted small">PNG, JPG ya da SVG. Teklifte, PDF'lerde ve uygulamanın üstünde görünür.</span></div></div>
+          <div class="fld" style="flex:1 1 220px"><label>Firma adın</label><input data-s="company" placeholder="ör. Deniz Tasarım"></div>
+          <div class="fld" style="flex:1 1 220px"><label>Müşteri</label><input data-s="customer"></div>
+          <div class="fld" style="flex:1 1 220px"><label>Proje</label><input data-s="project" placeholder="ör. 42' Gulet iç donanım"></div>
+          <div class="fld"><label>Teklif no</label><input data-s="quoteNo" class="w-m"></div>
+          <div class="fld"><label>Geçerlilik (gün)</label><input type="number" min="1" data-s="validity" class="w-s"></div>
+        </div>
+        <div class="fld" style="margin-top:10px"><label>Notlar (teklifin altına yazılır)</label><textarea data-s="notes"></textarea></div>
+      </div>
+      <div class="card">
+        <h2>Maliyet kalemleri</h2>
+        <div class="row">
+          <div class="fld"><label>Artan plaka</label><select data-s="remnant"><option value="full">Tam plaka say</option><option value="used">Son plakayı kullanılan oran kadar say</option></select></div>
+          <div class="fld"><label>Parça başı işlem (<span class="cur"></span>)</label><input type="number" min="0" step="any" data-s="perPart"></div>
+          <div class="fld"><label>İşçilik (saat)</label><input type="number" min="0" step="any" data-s="laborH" class="w-s"></div>
+          <div class="fld"><label>Saat ücreti (<span class="cur"></span>)</label><input type="number" min="0" step="any" data-s="laborRate"></div>
+          <div class="fld"><label>Kâr (%)</label><input type="number" step="any" data-s="profit" class="w-s"></div>
+          <div class="fld"><label>KDV (%)</label><input type="number" min="0" step="any" data-s="vat" class="w-s"></div>
+        </div>
+        <h3 style="margin-top:14px">Ek kalemler <span class="muted small">(kenar bandı, nakliye, montaj…)</span></h3>
+        <div id="extrasTbl"></div>
+        <button class="btn sm" id="btnAddExtra" style="margin-top:8px">+ Kalem ekle</button>
+      </div>
+      <div class="card">
+        <h2>İç hesap <span class="muted small">(müşteri görmez)</span></h2>
+        <div id="internal"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;margin-bottom:10px">
+          <h2 style="margin:0">Müşteri teklifi</h2>
+          <div class="row"><button class="btn sm" id="btnCopyQ">Metni kopyala</button><button class="btn sm pri dlb" id="btnPdf">PDF indir</button></div>
+        </div>
+        <div class="qwrap"><div id="quotePrev"></div></div>
+        <p class="muted small" style="margin:10px 0 0"><b>PDF indir</b> teklifi logonla birlikte A4 PDF olarak kaydeder. Kâr payı kalemlerin içine dağıtılır, müşteri ayrıca görmez.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="overlay" id="impOv"><div class="modal" id="impBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/*CORE-START*/
+const UNIT_SCALE={0:1,1:25.4,2:304.8,4:1,5:10,6:1000};
+const UNIT_NAME={1:'inç',2:'feet',4:'mm',5:'cm',6:'m'};
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
+function polyArea(p){let s=0;for(let i=0,n=p.length;i<n;i++){const a=p[i],b=p[(i+1)%n];s+=a[0]*b[1]-b[0]*a[1];}return s/2;}
+function polyLen(p){let s=0;for(let i=0,n=p.length;i<n;i++)s+=dist(p[i],p[(i+1)%n]);return s;}
+function bbox(p){let a=Infinity,b=Infinity,c=-Infinity,d=-Infinity;for(const q of p){if(q[0]<a)a=q[0];if(q[1]<b)b=q[1];if(q[0]>c)c=q[0];if(q[1]>d)d=q[1];}return{x0:a,y0:b,x1:c,y1:d};}
+function bbIn(o,i){return i.x0>=o.x0-1e-6&&i.y0>=o.y0-1e-6&&i.x1<=o.x1+1e-6&&i.y1<=o.y1+1e-6;}
+function pip(pt,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a[1]>pt[1])!==(b[1]>pt[1])&&pt[0]<(b[0]-a[0])*(pt[1]-a[1])/(b[1]-a[1])+a[0])c=!c;}return c;}
+function insideLoop(inner,outer){const n=inner.length,k=Math.min(7,n);let yes=0;for(let s=0;s<k;s++){if(pip(inner[Math.floor(s*n/k)],outer))yes++;}return yes*2>k;}
+function dedupe(p,tol){const o=[];for(const q of p){if(!o.length||dist(o[o.length-1],q)>tol)o.push(q);}while(o.length>2&&dist(o[0],o[o.length-1])<=tol)o.pop();return o;}
+
+function dxfPairs(text){const L=text.split(/\r\n|\r|\n/),out=[];for(let i=0;i+1<L.length;i+=2){const t=L[i].trim();if(!/^-?\d+$/.test(t)){i--;continue;}out.push([parseInt(t,10),L[i+1].trim()]);}return out;}
+function dxfUnits(P){for(let i=0;i<P.length;i++){if(P[i][0]===9&&P[i][1]==='$INSUNITS'){for(let j=i+1;j<i+4&&j<P.length;j++)if(P[j][0]===70)return parseInt(P[j][1],10);}if(P[i][0]===2&&P[i][1]==='ENTITIES')break;}return 0;}
+function dxfEntities(P){
+  let i=0;const n=P.length,raw=[];let found=false;
+  for(;i<n-1;i++){if(P[i][0]===0&&P[i][1]==='SECTION'&&P[i+1][0]===2&&P[i+1][1]==='ENTITIES'){i+=2;found=true;break;}}
+  if(!found)return[];
+  let cur=null;
+  for(;i<n;i++){const[c,v]=P[i];if(c===0){if(v==='ENDSEC')break;cur={type:v,codes:[]};raw.push(cur);}else if(cur)cur.codes.push([c,v]);}
+  const out=[];let poly=null;
+  for(const e of raw){if(e.type==='POLYLINE'){poly={type:'POLYLINE',codes:e.codes,verts:[]};out.push(poly);}else if(e.type==='VERTEX'){if(poly)poly.verts.push(e.codes);}else if(e.type==='SEQEND'){poly=null;}else out.push(e);}
+  return out;
+}
+const gn=(C,c,d)=>{for(const[k,v]of C)if(k===c)return parseFloat(v);return d;};
+const gt=(C,c,d)=>{for(const[k,v]of C)if(k===c)return v;return d;};
+function arcSteps(r,sweep,tol){const a=Math.abs(sweep);if(r<=tol*2)return Math.max(2,Math.ceil(a/(Math.PI/8)));const d=2*Math.acos(1-tol/r);return Math.min(720,Math.max(2,Math.ceil(a/d)));}
+function bulgeTo(p1,p2,b,tol,out){
+  if(Math.abs(b)<1e-9){out.push([p2[0],p2[1]]);return;}
+  const dx=p2[0]-p1[0],dy=p2[1]-p1[1],c=Math.hypot(dx,dy);if(c<1e-12)return;
+  const th=4*Math.atan(b),r=c/(2*Math.sin(th/2)),a=Math.atan2(dy,dx)+(Math.PI/2-th/2);
+  const cx=p1[0]+r*Math.cos(a),cy=p1[1]+r*Math.sin(a),a1=Math.atan2(p1[1]-cy,p1[0]-cx),R=Math.abs(r),n=arcSteps(R,th,tol);
+  for(let k=1;k<n;k++){const t=a1+th*k/n;out.push([cx+R*Math.cos(t),cy+R*Math.sin(t)]);}
+  out.push([p2[0],p2[1]]);
+}
+function polyFromVerts(vs,closed,tol,layer){
+  if(vs.length<2)return null;const pts=[[vs[0].x,vs[0].y]];
+  for(let i=0;i<vs.length-1;i++)bulgeTo([vs[i].x,vs[i].y],[vs[i+1].x,vs[i+1].y],vs[i].b,tol,pts);
+  if(closed){const l=vs[vs.length-1];bulgeTo([l.x,l.y],[vs[0].x,vs[0].y],l.b,tol,pts);pts.pop();}
+  return{pts,closed,layer};
+}
+function sampleNurbs(P,W,U,p,n){
+  const m=P.length,a=U[p],b=U[m],hw=W.length===m,out=[];
+  for(let s=0;s<=n;s++){
+    const t=a+(b-a)*s/n;let k=p;while(k<m-1&&U[k+1]<=t)k++;
+    const d=[];for(let j=0;j<=p;j++){const i=j+k-p,w=hw?W[i]:1;d.push([P[i][0]*w,P[i][1]*w,w]);}
+    for(let r=1;r<=p;r++)for(let j=p;j>=r;j--){const i=j+k-p,den=U[i+p-r+1]-U[i],al=den===0?0:(t-U[i])/den;d[j]=[(1-al)*d[j-1][0]+al*d[j][0],(1-al)*d[j-1][1]+al*d[j][1],(1-al)*d[j-1][2]+al*d[j][2]];}
+    out.push([d[p][0]/d[p][2],d[p][1]/d[p][2]]);
+  }
+  return out;
+}
+function entityCurves(e,tol){
+  const C=e.codes,L=gt(C,8,'0'),T=e.type;
+  if(T==='LINE')return[{pts:[[gn(C,10,0),gn(C,20,0)],[gn(C,11,0),gn(C,21,0)]],closed:false,layer:L}];
+  if(T==='CIRCLE'){const cx=gn(C,10,0),cy=gn(C,20,0),r=gn(C,40,0),n=Math.max(16,arcSteps(r,2*Math.PI,tol)),pts=[];for(let k=0;k<n;k++){const t=2*Math.PI*k/n;pts.push([cx+r*Math.cos(t),cy+r*Math.sin(t)]);}return[{pts,closed:true,layer:L}];}
+  if(T==='ARC'){const cx=gn(C,10,0),cy=gn(C,20,0),r=gn(C,40,0),a0=gn(C,50,0)*Math.PI/180;let a1=gn(C,51,360)*Math.PI/180;if(a1<=a0)a1+=2*Math.PI;const sw=a1-a0,n=arcSteps(r,sw,tol),pts=[];for(let k=0;k<=n;k++){const t=a0+sw*k/n;pts.push([cx+r*Math.cos(t),cy+r*Math.sin(t)]);}return[{pts,closed:false,layer:L}];}
+  if(T==='LWPOLYLINE'){const vs=[];for(const[c,v]of C){if(c===10)vs.push({x:+v,y:0,b:0});else if(c===20&&vs.length)vs[vs.length-1].y=+v;else if(c===42&&vs.length)vs[vs.length-1].b=+v;}const r=polyFromVerts(vs,(parseInt(gt(C,70,'0'),10)&1)===1,tol,L);return r?[r]:[];}
+  if(T==='POLYLINE'){const f=parseInt(gt(C,70,'0'),10);if(f&(16|64))return null;const vs=e.verts.map(v=>({x:gn(v,10,0),y:gn(v,20,0),b:gn(v,42,0)}));const r=polyFromVerts(vs,(f&1)===1,tol,L);return r?[r]:[];}
+  if(T==='ELLIPSE'){const cx=gn(C,10,0),cy=gn(C,20,0),mx=gn(C,11,1),my=gn(C,21,0),ra=gn(C,40,1),t0=gn(C,41,0);let sw=gn(C,42,2*Math.PI)-t0;if(sw<=1e-9)sw+=2*Math.PI;const full=Math.abs(sw-2*Math.PI)<1e-6,n=Math.max(24,arcSteps(Math.hypot(mx,my),sw,tol)),pts=[];for(let k=0;k<=(full?n-1:n);k++){const t=t0+sw*k/n,c=Math.cos(t),s=Math.sin(t);pts.push([cx+mx*c-ra*my*s,cy+my*c+ra*mx*s]);}return[{pts,closed:full,layer:L}];}
+  if(T==='SPLINE'){const p=parseInt(gt(C,71,'3'),10),f=parseInt(gt(C,70,'0'),10),U=[],P=[],W=[],F=[];for(const[c,v]of C){if(c===40)U.push(+v);else if(c===10)P.push([+v,0]);else if(c===20&&P.length)P[P.length-1][1]=+v;else if(c===41)W.push(+v);else if(c===11)F.push([+v,0]);else if(c===21&&F.length)F[F.length-1][1]=+v;}
+    let pts;if(P.length>p&&U.length===P.length+p+1)pts=sampleNurbs(P,W,U,p,Math.min(4000,Math.max(48,P.length*24)));else if(F.length>1)pts=F;else return[];
+    return[{pts,closed:(f&1)===1&&dist(pts[0],pts[pts.length-1])<tol*4,layer:L}];}
+  return null;
+}
+function buildLoops(curves,tol){
+  const loops=[],open=[];
+  for(const c of curves){if(!c||c.pts.length<2)continue;const a=c.pts[0],z=c.pts[c.pts.length-1];if(c.closed||(c.pts.length>2&&dist(a,z)<=tol))loops.push({pts:dedupe(c.pts,tol/10),layer:c.layer});else open.push(c);}
+  const used=new Array(open.length).fill(false);let dangling=0;
+  for(let i=0;i<open.length;i++){
+    if(used[i])continue;used[i]=true;const chain=open[i].pts.slice(),layer=open[i].layer;let prog=true;
+    while(prog){prog=false;const end=chain[chain.length-1];if(chain.length>2&&dist(end,chain[0])<=tol)break;
+      for(let j=0;j<open.length;j++){if(used[j])continue;const p=open[j].pts;
+        if(dist(p[0],end)<=tol){for(let k=1;k<p.length;k++)chain.push(p[k]);used[j]=true;prog=true;break;}
+        if(dist(p[p.length-1],end)<=tol){for(let k=p.length-2;k>=0;k--)chain.push(p[k]);used[j]=true;prog=true;break;}}}
+    if(chain.length>2&&dist(chain[0],chain[chain.length-1])<=tol)loops.push({pts:dedupe(chain,tol/10),layer});else dangling++;
+  }
+  return{loops,dangling};
+}
+function rdp(pts,eps){if(pts.length<3)return pts;let dmax=0,idx=0;const a=pts[0],b=pts[pts.length-1],L=dist(a,b);for(let i=1;i<pts.length-1;i++){const p=pts[i];const d=L<1e-12?dist(p,a):Math.abs((b[0]-a[0])*(a[1]-p[1])-(a[0]-p[0])*(b[1]-a[1]))/L;if(d>dmax){dmax=d;idx=i;}}if(dmax>eps){const l=rdp(pts.slice(0,idx+1),eps),r=rdp(pts.slice(idx),eps);return l.slice(0,-1).concat(r);}return[a,b];}
+function simplifyLoop(p,eps){if(p.length<8)return p;const s=rdp(p.concat([p[0]]),eps);s.pop();return s.length>=3?s:p;}
+function rotPts(pts,ang){const c=Math.cos(ang),s=Math.sin(ang);return pts.map(p=>[p[0]*c-p[1]*s,p[0]*s+p[1]*c]);}
+function minBoxAngle(pts){let best=0,bestA=Infinity;const test=a=>{const b=bbox(rotPts(pts,a)),A=(b.x1-b.x0)*(b.y1-b.y0);if(A<bestA-1e-9){bestA=A;best=a;}};const d=Math.PI/180;for(let i=0;i<90;i++)test(i*d);const c=best;for(let i=-10;i<=10;i++)test(c+i*d/10);return best;}
+function finalizeShape(loops,autoRot){
+  let L=loops.map(l=>simplifyLoop(l,0.03));
+  if(autoRot){const a=minBoxAngle(L[0]);if(Math.abs(a)>1e-9)L=L.map(l=>rotPts(l,a));}
+  const b=bbox(L[0]);L=L.map(l=>l.map(p=>[Math.round((p[0]-b.x0)*100)/100,Math.round((p[1]-b.y0)*100)/100]));
+  const w=b.x1-b.x0,h=b.y1-b.y0;let area=Math.abs(polyArea(L[0]));for(let i=1;i<L.length;i++)area-=Math.abs(polyArea(L[i]));
+  return{w:Math.round(w*100)/100,h:Math.round(h*100)/100,area,perim:L.reduce((s,l)=>s+polyLen(l),0),loops:L};
+}
+function processDXF(text,opts){
+  const P=dxfPairs(text),units=dxfUnits(P),scale=opts.scale||UNIT_SCALE[units]||1,ents=dxfEntities(P),tol=0.05/scale;
+  const curves=[];let inserts=0;const skipped={};
+  for(const e of ents){if(e.type==='INSERT'){inserts++;continue;}const cs=entityCurves(e,tol);if(cs===null){skipped[e.type]=(skipped[e.type]||0)+1;continue;}for(const c of cs)curves.push(c);}
+  for(const c of curves)c.pts=c.pts.map(p=>[p[0]*scale,p[1]*scale]);
+  const{loops,dangling}=buildLoops(curves,0.1);
+  const Ls=loops.map(l=>({pts:l.pts,layer:l.layer,area:Math.abs(polyArea(l.pts)),bb:bbox(l.pts)})).filter(l=>l.area>1).sort((a,b)=>b.area-a.area);
+  for(let i=0;i<Ls.length;i++){Ls[i].parent=-1;for(let j=i-1;j>=0;j--){if(bbIn(Ls[j].bb,Ls[i].bb)&&insideLoop(Ls[i].pts,Ls[j].pts)){Ls[i].parent=j;break;}}Ls[i].depth=Ls[i].parent<0?0:Ls[Ls[i].parent].depth+1;}
+  const parts=[];
+  for(let i=0;i<Ls.length;i++){if(Ls[i].depth%2)continue;const loopsI=[Ls[i].pts];for(let j=i+1;j<Ls.length;j++)if(Ls[j].parent===i)loopsI.push(Ls[j].pts);const sh=finalizeShape(loopsI,opts.autoRot);sh.layer=Ls[i].layer;sh.holes=loopsI.length-1;sh.qty=1;parts.push(sh);}
+  let out=parts;
+  if(opts.merge){const m=new Map();for(const p of parts){const k=[p.layer,Math.round(p.w),Math.round(p.h),Math.round(p.area/50),Math.round(p.perim/2),p.holes].join('|');if(m.has(k))m.get(k).qty++;else m.set(k,p);}out=[...m.values()];}
+  const layers={};for(const p of out)layers[p.layer]=(layers[p.layer]||0)+p.qty;
+  return{units,scale,parts:out,dangling,inserts,skipped,layers,total:parts.length};
+}
+
+/* ---- yerleşim (MaxRects) ---- */
+function mrFit(sheet,it){let best=null;const ors=[[it.w,it.h,false]];if(it.rot&&Math.abs(it.w-it.h)>1e-9)ors.push([it.h,it.w,true]);
+  for(const f of sheet.free)for(const[w,h,r]of ors){if(w<=f.w+1e-7&&h<=f.h+1e-7){const ss=Math.min(f.w-w,f.h-h),ls=Math.max(f.w-w,f.h-h);if(!best||ss<best.ss-1e-9||(Math.abs(ss-best.ss)<=1e-9&&ls<best.ls)){best={x:f.x,y:f.y,w,h,rotated:r,ss,ls};}}}return best;}
+function mrPlace(sheet,r){const nf=[];for(const f of sheet.free){if(r.x>=f.x+f.w||r.x+r.w<=f.x||r.y>=f.y+f.h||r.y+r.h<=f.y){nf.push(f);continue;}
+  if(r.x>f.x)nf.push({x:f.x,y:f.y,w:r.x-f.x,h:f.h});if(r.x+r.w<f.x+f.w)nf.push({x:r.x+r.w,y:f.y,w:f.x+f.w-r.x-r.w,h:f.h});
+  if(r.y>f.y)nf.push({x:f.x,y:f.y,w:f.w,h:r.y-f.y});if(r.y+r.h<f.y+f.h)nf.push({x:f.x,y:r.y+r.h,w:f.w,h:f.y+f.h-r.y-r.h});}
+  const fl=nf.filter(f=>f.w>1e-6&&f.h>1e-6),keep=[];
+  for(let i=0;i<fl.length;i++){let c=false;const a=fl[i];for(let j=0;j<fl.length;j++){if(i===j)continue;const b=fl[j];if(a.x>=b.x-1e-9&&a.y>=b.y-1e-9&&a.x+a.w<=b.x+b.w+1e-9&&a.y+a.h<=b.y+b.h+1e-9){if(a.x===b.x&&a.y===b.y&&a.w===b.w&&a.h===b.h&&j>i)continue;c=true;break;}}if(!c)keep.push(a);}
+  sheet.free=keep;}
+function mrPack(items,W,H){const sheets=[],unplaced=[];
+  for(const it of items){const fitsBin=(it.w<=W+1e-7&&it.h<=H+1e-7)||(it.rot&&it.h<=W+1e-7&&it.w<=H+1e-7);if(!fitsBin){unplaced.push(it);continue;}
+    let best=null,bi=-1;for(let s=0;s<sheets.length;s++){const b=mrFit(sheets[s],it);if(b&&(!best||b.ss<best.ss-1e-9||(Math.abs(b.ss-best.ss)<=1e-9&&b.ls<best.ls))){best=b;bi=s;}}
+    if(!best){sheets.push({free:[{x:0,y:0,w:W,h:H}],placed:[]});bi=sheets.length-1;best=mrFit(sheets[bi],it);}
+    const r={x:best.x,y:best.y,w:best.w,h:best.h};mrPlace(sheets[bi],r);sheets[bi].placed.push({x:r.x,y:r.y,w:r.w,h:r.h,rotated:best.rotated,ref:it.ref});}
+  return{sheets,unplaced};}
+const SORTS=[(a,b)=>b.w*b.h-a.w*a.h,(a,b)=>Math.max(b.w,b.h)-Math.max(a.w,a.h)||b.w*b.h-a.w*a.h,(a,b)=>(b.w+b.h)-(a.w+a.h),(a,b)=>b.h-a.h||b.w-a.w,(a,b)=>b.w-a.w||b.h-a.h,(a,b)=>Math.min(b.w,b.h)-Math.min(a.w,a.h)||b.w*b.h-a.w*a.h];
+function nestGroup(parts,mat,margin,gap){
+  const W=mat.w-2*margin+gap,H=mat.h-2*margin+gap,items=[];
+  for(const p of parts)for(let k=0;k<Math.max(0,Math.floor(p.qty||0));k++)items.push({w:p.w+gap,h:p.h+gap,rot:p._rot!==undefined?p._rot:p.rot!==false,ref:p});
+  let best=null;
+  for(const s of SORTS){const res=mrPack(items.slice().sort(s),W,H);const last=res.sheets.length?res.sheets[res.sheets.length-1].placed.reduce((t,q)=>t+q.w*q.h,0):0;res.lastUse=last;
+    if(!best||res.unplaced.length<best.unplaced.length||(res.unplaced.length===best.unplaced.length&&(res.sheets.length<best.sheets.length||(res.sheets.length===best.sheets.length&&last<best.lastUse))))best=res;}
+  best.binW=W;best.binH=H;
+  for(const sh of best.sheets){sh.partArea=sh.placed.reduce((t,q)=>t+q.ref.area,0);sh.rectFrac=sh.placed.reduce((t,q)=>t+q.w*q.h,0)/(W*H);}
+  return best;
+}
+function placedLoops(q,margin){const p=q.ref,L=p.loops||[[[0,0],[p.w,0],[p.w,p.h],[0,p.h]]];
+  return L.map(l=>l.map(pt=>{const r=q.rotated?[pt[1],p.w-pt[0]]:pt;return[r[0]+margin+q.x,r[1]+margin+q.y];}));}
+
+/* ---- DXF yazıcı + ZIP ---- */
+function asciiTR(s){return String(s).replace(/[çÇğĞıİöÖşŞüÜ]/g,c=>({'ç':'c','Ç':'C','ğ':'g','Ğ':'G','ı':'i','İ':'I','ö':'o','Ö':'O','ş':'s','Ş':'S','ü':'u','Ü':'U'}[c])).replace(/[^\x20-\x7E]/g,'_');}
+function dxfAll(){const o=['0','SECTION','2','ENTITIES'];let oy=0;
+  for(const g of R.groups)g.res.sheets.forEach((sh,i)=>{const body=dxfSheet(g.mat,sh,R.margin,0,oy,`${g.mat.name} ${g.mat.t}mm - Plaka ${i+1}/${g.res.sheets.length}`);o.push(body);oy-=g.mat.h+300;});
+  o.push('0','ENDSEC','0','EOF');return o.join('\r\n')+'\r\n';}
+function dxfSheet(mat,sheet,margin,ox,oy,title){
+  const o=[],body=ox!==undefined;ox=ox||0;oy=oy||0;const f=n=>(Math.round(n*1000)/1000).toString();
+  const pl=(pts,layer)=>{o.push('0','POLYLINE','8',layer,'66','1','70','1','10','0','20','0','30','0');for(const p of pts)o.push('0','VERTEX','8',layer,'10',f(p[0]+ox),'20',f(p[1]+oy),'30','0');o.push('0','SEQEND','8',layer);};
+  const tx=(x,y,h,t)=>o.push('0','TEXT','8','ETIKET','10',f(x+ox),'20',f(y+oy),'30','0','40',f(h),'1',asciiTR(t));
+  if(!body)o.push('0','SECTION','2','ENTITIES');
+  pl([[0,0],[mat.w,0],[mat.w,mat.h],[0,mat.h]],'PLAKA');if(title)tx(0,mat.h+40,60,title);
+  for(const q of sheet.placed){const L=placedLoops(q,margin);pl(L[0],'PARCA_DIS');for(let i=1;i<L.length;i++)pl(L[i],'PARCA_IC');
+    const h=Math.max(8,Math.min(40,Math.min(q.w,q.h)/8));tx(margin+q.x+h,margin+q.y+h,h,q.ref.name||'');}
+  if(body)return o.join('\r\n');
+  o.push('0','ENDSEC','0','EOF');return o.join('\r\n')+'\r\n';
+}
+const CRC_T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_T[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0;}
+function makeZip(files){
+  const enc=new TextEncoder(),chunks=[],cd=[];let off=0;const d=new Date();
+  const dt=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate(),tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1);
+  for(const f of files){const name=enc.encode(f.name),data=typeof f.data==='string'?enc.encode(f.data):f.data,crc=crc32(data);
+    const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,tm,true);h.setUint16(12,dt,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);h.setUint16(28,0,true);
+    chunks.push(new Uint8Array(h.buffer),name,data);
+    const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);c.setUint16(12,tm,true);c.setUint16(14,dt,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+    cd.push(new Uint8Array(c.buffer),name);off+=30+name.length+data.length;}
+  const cdSize=cd.reduce((s,x)=>s+x.length,0),e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cdSize,true);e.setUint32(16,off,true);
+  const all=[...chunks,...cd,new Uint8Array(e.buffer)],tot=all.reduce((s,x)=>s+x.length,0),out=new Uint8Array(tot);let p=0;for(const x of all){out.set(x,p);p+=x.length;}return out;
+}
+/*CORE-END*/
+
+/* ================= UYGULAMA ================= */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const CUR={TRY:'₺',EUR:'€',USD:'$'};
+const KEY='nestTeklif.v1';
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(n,d=2)=>(isFinite(n)?n:0).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const money=n=>fmt(n)+' '+CUR[S.settings.currency||'TRY'];
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2600);}
+
+function shapePart(name,raw,qty,mat){const sh=finalizeShape(raw,false);return{id:uid(),name,w:sh.w,h:sh.h,qty,mat,rotMode:'mat',area:sh.area,perim:sh.perim,loops:sh.loops};}
+function rectPart(name,w,h,qty,mat,rotMode='mat'){return{id:uid(),name,w,h,qty,mat,rotMode,area:w*h,perim:2*(w+h),loops:null};}
+function sampleState(){
+  const m=[{id:uid(),name:'Marin kontrplak',t:6,w:2500,h:1250,price:2500,cut:20},{id:uid(),name:'Marin kontrplak',t:12,w:2500,h:1250,price:4000,cut:25},{id:uid(),name:'Marin kontrplak',t:18,w:2500,h:1250,price:5500,cut:30,grain:'free'},{id:uid(),name:'Tik kaplamalı kontrplak',t:12,w:2500,h:1250,price:9500,cut:25,grain:'grain'},{id:uid(),name:'MDF',t:18,w:2800,h:2100,price:1900,cut:18,grain:'free'},{id:uid(),name:'Suntalam',t:18,w:3660,h:1830,price:1700,cut:18,grain:'grain'},{id:uid(),name:'Kavak kontrplak',t:8,w:2440,h:1220,price:900,cut:15,grain:'free'},{id:uid(),name:'Alüminyum 5083',t:5,w:3000,h:1500,price:22000,cut:60}];
+  const today=new Date(),qn='T-'+today.toISOString().slice(0,10).replace(/-/g,'')+'-01';
+  const frame=[];for(let i=0;i<=40;i++){const x=-600+1200*i/40;frame.push([x,320*Math.pow(Math.abs(x)/600,1.6)]);}frame.push([600,760],[-600,760]);
+  const hole=[];for(let i=0;i<48;i++){const t=2*Math.PI*i/48;hole.push([260*Math.cos(t),470+150*Math.sin(t)]);}
+  const limb=[];for(let i=0;i<24;i++){const t=2*Math.PI*i/24;limb.push([35*Math.cos(t),90+35*Math.sin(t)]);}
+  const knee=[[0,0],[420,0],[420,40],[60,400],[0,400]];
+  return{sample:true,
+    settings:{theme:'auto',currency:'TRY',margin:10,gap:8,remnant:'full',perPart:15,laborH:6,laborRate:600,profit:25,vat:20,company:'',customer:'',project:'',quoteNo:qn,validity:15,notes:'Fiyatlara montaj dahil değildir.\nTeslim süresi sipariş onayından itibaren 10 iş günüdür.'},
+    materials:m,
+    parts:[rectPart('Dolap yan paneli',720,560,4,m[2].id),rectPart('Raf',560,300,8,m[2].id),rectPart('Kapak',700,400,6,m[2].id,'fixed'),rectPart('Döşeme paneli',1200,600,4,m[1].id),
+      shapePart('Perde P3',[frame,hole,limb],2,m[1].id),shapePart('Braket',[knee],12,m[0].id)],
+    extras:[{id:uid(),name:'Kenar bandı',amount:1200}]};
+}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.parts&&s.materials)return migrate(s);}catch(e){}return null;}
+function migrate(s){for(const p of s.parts){if(!p.rotMode)p.rotMode=p.rot===false?'fixed':'mat';delete p.rot;delete p._rot;}for(const m of s.materials)if(!m.grain)m.grain='free';s.extras=s.extras||[];if(!s.settings.theme)s.settings.theme='auto';return s;}
+let S=load()||sampleState(),R=null,dirty=true;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function changed(){dirty=true;save();}
+const matById=id=>S.materials.find(m=>m.id===id);
+const matLabel=m=>m?`${m.name} ${fmt(m.t,m.t%1?1:0)} mm · ${m.w}×${m.h}`:'— seçilmedi —';
+const THEMES={marine:{name:'Yat projesi',h:200,r:26,s:58,acc:'#0b6fa8',soft:'#e3f1fa',chip:'linear-gradient(135deg,#5fb3e6,#0b6fa8)'},wood:{name:'Mobilya projesi',h:30,r:18,s:46,acc:'#94602f',soft:'#f6ece0',chip:'linear-gradient(135deg,#d9a46c,#7a4a22)'},neutral:{name:'Karma proje',h:212,r:18,s:22,acc:'#3d6a96',soft:'#ebf1f7',chip:'linear-gradient(135deg,#fff,#9aa8b8)'}};
+const CAT_NAME={yat:'Yat',mobilya:'Mobilya',diger:'Diğer'};
+function autoCat(name){const n=String(name).toLocaleLowerCase('tr');if(/marin|alümin|alumin|tik|teak|fiber|karbon|elyaf|grp|köpük|divinycell|corecell|airex|balsa|okume|okoume|maun/.test(n))return'yat';if(/mdf|sunta|kavak|lam|yonga|osb|mobilya|melamin|hi.?gloss|akrilik|huş|hus|kayın|kayin|meşe|mese|ceviz/.test(n))return'mobilya';return'diger';}
+const matCat=m=>m.cat&&m.cat!=='auto'?m.cat:autoCat(m.name);
+function projectTheme(){const t=S.settings.theme;if(t&&t!=='auto')return t;const cats=new Set();for(const p of S.parts){if(!(p.qty>0))continue;const m=matById(p.mat);if(m)cats.add(matCat(m));}cats.delete('diger');if(cats.size===1)return cats.has('yat')?'marine':'wood';return'neutral';}
+let THEME='neutral';
+function applyTheme(){THEME=projectTheme();document.documentElement.dataset.theme=THEME;const T=THEMES[THEME];$('#themeChip').innerHTML=`<i style="background:${T.chip}"></i><span>${T.name}</span>`;}
+function partColor(id){const T=THEMES[THEME];let h=0;for(const c of String(id))h=(h*131+c.charCodeAt(0))>>>0;const hh=T.h+(h%T.r)-T.r/2,l=72+((h>>5)%14);return{f:`hsl(${hh.toFixed(1)}, ${T.s}%, ${l}%)`,s:`hsl(${hh.toFixed(1)}, ${Math.min(70,T.s+10)}%, 30%)`};}
+const ROT_OPTS=[['mat','Malzemeye göre'],['free','Serbest'],['fixed','Sabit (suyuna)']];
+function canRot(p){const r=p.rotMode||(p.rot===false?'fixed':'mat');if(r==='free')return true;if(r==='fixed')return false;const m=matById(p.mat);return !(m&&m.grain==='grain');}
+const rotHint=p=>canRot(p)?'↻ döndürülebilir':'→ su yönünde sabit';
+function rot90(p){if(p.loops)p.loops=p.loops.map(l=>l.map(pt=>[Math.round(pt[1]*100)/100,Math.round((p.w-pt[0])*100)/100]));const w=p.w;p.w=p.h;p.h=w;}
+const matOpts=sel=>S.materials.map(m=>`<option value="${m.id}"${m.id===sel?' selected':''}>${esc(matLabel(m))}</option>`).join('');
+
+/* SVG yardımcıları */
+const pathD=L=>L.map(l=>'M'+l.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L')+'Z').join('');
+function thumbSVG(p,cls='thumb'){const L=p.loops||[[[0,0],[p.w,0],[p.w,p.h],[0,p.h]]],pad=Math.max(p.w,p.h)*0.04;
+  return`<svg class="${cls}" viewBox="${-pad} ${-pad} ${p.w+2*pad} ${p.h+2*pad}" preserveAspectRatio="xMidYMid meet"><g transform="translate(0,${p.h}) scale(1,-1)"><path d="${pathD(L)}" style="fill:color-mix(in srgb,var(--acc) 18%,#fff);stroke:var(--acc)" stroke-width="1.2" vector-effect="non-scaling-stroke" fill-rule="evenodd"/></g></svg>`;}
+function hue(s){let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h;}
+
+/* ---------- PARÇALAR ---------- */
+$('#chkArea').onchange=e=>{S.settings.showArea=e.target.checked;save();renderParts();};
+function partCountTxt(){const tot=S.parts.reduce((s,p)=>s+(+p.qty||0),0);$('#partCount').textContent=`${S.parts.length} kalem · ${tot} adet`;}
+function renderParts(){
+  $('#aM').innerHTML=matOpts($('#aM').value||S.materials[0]?.id);
+  $('#sampleNote').classList.toggle('hide',!S.sample);
+  partCountTxt();$('#chkArea').checked=!!S.settings.showArea;
+  if(!S.parts.length){$('#partsTbl').innerHTML='<p class="muted">Henüz parça yok. DXF yükle ya da elle ekle.</p>';return;}
+  $('#partsTbl').innerHTML=`<div class="tbl"><table><thead><tr><th></th><th>Parça</th><th class="num">En × Boy (mm)</th>${S.settings.showArea?'<th class="num">Alan (m²)</th>':''}<th>Adet</th><th>Malzeme / kalınlık</th><th>Döndürme</th><th></th></tr></thead><tbody>${
+    S.parts.map(p=>`<tr><td>${thumbSVG(p)}</td><td><input type="text" data-c="parts" data-id="${p.id}" data-f="name" value="${esc(p.name)}">${p.loops?`<div class="muted small">serbest şekil${p.layer?' · katman: '+esc(p.layer):''}</div>`:''}</td>
+    <td class="num" style="white-space:nowrap">${p.loops?`${fmt(p.w,1)} × ${fmt(p.h,1)}`:`<input type="number" min="1" step="any" data-c="parts" data-id="${p.id}" data-f="w" value="${p.w}" style="width:70px"> × <input type="number" min="1" step="any" data-c="parts" data-id="${p.id}" data-f="h" value="${p.h}" style="width:70px">`}</td>
+    ${S.settings.showArea?`<td class="num" id="ar-${p.id}">${fmt(p.area/1e6,3)}</td>`:''}
+    <td><input type="number" min="0" step="1" class="w-s" data-c="parts" data-id="${p.id}" data-f="qty" value="${p.qty}"></td>
+    <td><select data-c="parts" data-id="${p.id}" data-f="mat">${matById(p.mat)?'':'<option value="">— seç —</option>'}${matOpts(p.mat)}</select></td>
+    <td><select data-c="parts" data-id="${p.id}" data-f="rotMode">${ROT_OPTS.map(([v,t])=>`<option value="${v}"${(p.rotMode||'mat')===v?' selected':''}>${t}</option>`).join('')}</select><div class="muted small" id="rx-${p.id}">${rotHint(p)}</div></td>
+    <td style="white-space:nowrap"><button class="btn sm ghost" data-rot90="${p.id}" title="Parçayı 90° çevir (su yönüne göre hizalamak için)">⟲ 90°</button><button class="btn del" data-delpart="${p.id}" title="Sil">✕</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+$('#addForm').addEventListener('submit',e=>{e.preventDefault();const w=+$('#aW').value,h=+$('#aH').value,q=Math.max(1,Math.floor(+$('#aQ').value||1));if(!(w>0&&h>0))return;
+  if(!S.materials.length){toast('Önce Malzemeler sekmesinden bir malzeme ekle.');return;}
+  S.parts.push(rectPart($('#aName').value.trim()||`Parça ${S.parts.length+1}`,w,h,q,$('#aM').value,$('#aR').value));
+  $('#aName').value='';$('#aW').value='';$('#aH').value='';$('#aQ').value='1';$('#aName').focus();changed();renderParts();});
+$('#btnClear').onclick=()=>{S.parts=[];S.sample=false;changed();renderParts();toast('Parçalar temizlendi.');};
+$('#btnClearParts').onclick=()=>{if(!S.parts.length)return;const b=$('#btnClearParts');if(b.dataset.arm){S.parts=[];S.sample=false;changed();renderParts();b.textContent='Tüm parçaları sil';delete b.dataset.arm;}else{b.dataset.arm=1;b.textContent='Emin misin? Tekrar tıkla';setTimeout(()=>{delete b.dataset.arm;b.textContent='Tüm parçaları sil';},3000);}};
+
+/* genel düzenleme */
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.c){const coll=S[t.dataset.c],o=coll&&coll.find(x=>x.id===t.dataset.id);if(!o)return;const f=t.dataset.f;
+    let v=t.type==='checkbox'?t.checked:t.type==='number'?(t.value===''?0:+t.value):t.value;if(f==='qty')v=Math.max(0,Math.floor(v));o[f]=v;
+    if(t.dataset.c==='parts'&&(f==='w'||f==='h')&&!o.loops){o.area=o.w*o.h;o.perim=2*(o.w+o.h);}
+    if(t.dataset.c==='parts'||t.dataset.c==='materials')S.sample=false;
+    changed();
+    if(t.dataset.c==='parts'){const a=document.getElementById('ar-'+o.id);if(a)a.textContent=fmt(o.area/1e6,3);const rx=document.getElementById('rx-'+o.id);if(rx)rx.textContent=rotHint(o);partCountTxt();}
+    else if(t.dataset.c==='materials'){if(f==='name')renderMats();refresh('mat');}
+    else refresh('x');
+    return;}
+  if(t.dataset.s){S.settings[t.dataset.s]=t.type==='number'?(t.value===''?0:+t.value):t.value;changed();if(t.dataset.s==='currency'){renderMats();}if(cur==='teklif'||cur==='yerlesim'||t.dataset.s==='theme')refresh('x');else applyTheme();}
+});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.s&&(t.tagName==='TEXTAREA'||t.type==='text'||!t.type)){S.settings[t.dataset.s]=t.value;save();if(cur==='teklif')renderQuote();}});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-delpart],[data-delmat],[data-delx],[data-rot90]');if(!t)return;
+  if(t.dataset.rot90){const p=S.parts.find(x=>x.id===t.dataset.rot90);if(p){rot90(p);S.sample=false;changed();renderParts();}return;}
+  if(t.dataset.delpart){S.parts=S.parts.filter(p=>p.id!==t.dataset.delpart);changed();renderParts();}
+  if(t.dataset.delmat){const used=S.parts.some(p=>p.mat===t.dataset.delmat);if(used&&!t.dataset.arm){t.dataset.arm=1;t.textContent='Parçalarda kullanılıyor, yine de sil?';return;}S.materials=S.materials.filter(m=>m.id!==t.dataset.delmat);changed();renderMats();renderParts();}
+  if(t.dataset.delx){S.extras=S.extras.filter(x=>x.id!==t.dataset.delx);changed();renderExtras();renderQuote();}});
+
+/* ---------- MALZEMELER ---------- */
+function renderMats(){
+  $('#matTbl').innerHTML=S.materials.length?`<div class="tbl"><table><thead><tr><th>Malzeme</th><th>Kalınlık (mm)</th><th>Plaka en (mm)</th><th>Plaka boy (mm)</th><th>Plaka fiyatı (${CUR[S.settings.currency]})</th><th>Kesim (${CUR[S.settings.currency]}/m)</th><th>Kesim yönü</th><th>Kullanım</th><th></th></tr></thead><tbody>${
+    S.materials.map(m=>`<tr class="${+m.price?'':'noprice'}"><td><input type="text" data-c="materials" data-id="${m.id}" data-f="name" value="${esc(m.name)}"></td>
+    ${['t','w','h','price','cut'].map(f=>`<td><input type="number" min="0" step="any" data-c="materials" data-id="${m.id}" data-f="${f}" value="${m[f]}"></td>`).join('')}
+    <td><select data-c="materials" data-id="${m.id}" data-f="grain"><option value="free"${m.grain!=='grain'?' selected':''}>Serbest (döndürülebilir)</option><option value="grain"${m.grain==='grain'?' selected':''}>Suyuna kes (döndürme yok)</option></select></td>
+    <td><select data-c="materials" data-id="${m.id}" data-f="cat"><option value="auto"${!m.cat||m.cat==='auto'?' selected':''}>Otomatik (${CAT_NAME[autoCat(m.name)]})</option>${['yat','mobilya','diger'].map(c=>`<option value="${c}"${m.cat===c?' selected':''}>${CAT_NAME[c]}</option>`).join('')}</select></td>
+    <td><button class="btn del" data-delmat="${m.id}">✕</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Malzeme yok.</p>';
+}
+$('#btnAddMat').onclick=()=>{const l=S.materials[S.materials.length-1];S.materials.push({id:uid(),name:l?l.name:'Yeni malzeme',t:l?l.t:10,w:l?l.w:2440,h:l?l.h:1220,price:0,cut:0,grain:l?l.grain||'free':'free'});changed();renderMats();renderParts();};
+
+/* ---------- MALZEME KÜTÜPHANESİ ---------- */
+const CATALOG=[
+ {grp:'Yat ve tekne',items:[
+  {name:'Marin kontrplak (okume, BS1088)',cat:'yat',grain:'free',sizes:[[2500,1220],[3100,1530]],ts:[4,6,9,12,15,18,25],note:'Bölme, döşeme, mobilya; en yaygın 2500×1220'},
+  {name:'Huş kontrplak',cat:'yat',grain:'free',sizes:[[2500,1250],[2440,1220],[3000,1500]],ts:[6.5,9,12,15,18,21,24],note:'Riga/Sveza tipi; sert, düzgün yüzey'},
+  {name:'Tik kaplamalı kontrplak',cat:'yat',grain:'grain',sizes:[[2500,1220]],ts:[4,6,9,12,15],note:'Desenli yüzey; suyuna kesilir'},
+  {name:'Alüminyum 5083',cat:'yat',grain:'free',sizes:[[3000,1500],[4000,2000],[6000,2000]],ts:[3,4,5,6,8,10,12,15],note:'Denizcilik alaşımı (H111 / H321)'},
+  {name:'PVC köpük çekirdek (H80 tipi)',cat:'yat',grain:'free',sizes:[[2440,1220],[1220,610]],ts:[5,10,15,20,25,30],note:'Sandviç çekirdek; Divinycell tipi'}]},
+ {grp:'Mobilya',items:[
+  {name:'MDF',cat:'mobilya',grain:'free',sizes:[[2800,2100],[3660,1830],[2440,1220]],ts:[4,8,10,12,16,18,22,25,30],note:'Ham MDF; boyalı/lake işler için'},
+  {name:'MDF Lam (melamin kaplı)',cat:'mobilya',grain:'free',sizes:[[2800,2100],[3660,1830]],ts:[8,16,18],note:'Ahşap desenliyse kesim yönünü "suyuna" yap'},
+  {name:'Suntalam (melamin kaplı yonga)',cat:'mobilya',grain:'free',sizes:[[3660,1830],[2800,2100]],ts:[8,12,16,18,25],note:'Dolap gövdesi, raf'},
+  {name:'Sunta (ham yonga levha)',cat:'mobilya',grain:'free',sizes:[[3660,1830]],ts:[12,16,18,22,25,30],note:'Kaplama / HPL altı'},
+  {name:'Kavak kontrplak',cat:'mobilya',grain:'free',sizes:[[2200,1700],[2440,1220]],ts:[4,6,8,10,12,15,18],note:'Hafif, ekonomik'},
+  {name:'Parlak / mat panel (high-gloss)',cat:'mobilya',grain:'free',sizes:[[2800,2100]],ts:[8,16,18],note:'MDF veya yonga gövdeli dekoratif panel'},
+  {name:'Kompakt panel (siyah çekirdek)',cat:'mobilya',grain:'free',sizes:[[2440,1830],[2440,2100],[3660,1830]],ts:[12],note:'Kenar bantsız; ıslak hacim, ofis'}]},
+ {grp:'Genel / plastik',items:[
+  {name:'Kompakt laminat (HPL)',cat:'diger',grain:'free',sizes:[[3050,1300],[2790,2060]],ts:[6,10,12],note:'Tezgah, kabin, ıslak alan'},
+  {name:'Akrilik (pleksi)',cat:'diger',grain:'free',sizes:[[3050,2050],[2000,1000]],ts:[3,4,5,6,8,10],note:'Şeffaf / renkli'},
+  {name:'PVC köpük levha (Forex tipi)',cat:'diger',grain:'free',sizes:[[2440,1220],[3050,1560],[3050,2050]],ts:[3,5,8,10],note:'Tabela, iç kaplama'}]}];
+let CSEL=null;
+const catItem=k=>{const[g,i]=k.split('-').map(Number);return CATALOG[g].items[i];};
+function openCatalog(){CSEL={};CATALOG.forEach((g,gi)=>g.items.forEach((it,ii)=>{CSEL[gi+'-'+ii]={on:false,size:0,ts:new Set()};}));renderCatalog();$('#impOv').classList.add('on');}
+function renderCatalog(){
+  const n=Object.values(CSEL).reduce((s,x)=>s+(x.on?x.ts.size:0),0);
+  $('#impBox').innerHTML=`<h2>Piyasa malzemeleri</h2><p class="muted" style="margin:0 0 14px">Piyasada yaygın standart plaka ölçüleri. Malzemeyi işaretle, ölçüsünü ve kalınlıklarını seç. <b>Fiyatları sen girersin</b>, tedarikçiye göre değişiyor.</p>
+  ${CATALOG.map((g,gi)=>`<div style="margin-bottom:16px"><div style="margin-bottom:8px"><span class="pill cat-${g.items[0].cat}">${esc(g.grp)}</span></div>
+   <div style="display:grid;gap:8px">${g.items.map((it,ii)=>{const k=gi+'-'+ii,c=CSEL[k];return`<div class="catrow${c.on?' on':''}"><label class="row" style="gap:10px;align-items:center;cursor:pointer;flex-wrap:nowrap"><input type="checkbox" data-ck="${k}" ${c.on?'checked':''}><span><b>${esc(it.name)}</b><span class="muted small"> · ${esc(it.note)}</span></span></label>
+    ${c.on?`<div class="row" style="gap:6px;margin-top:10px;align-items:center"><span class="muted small" style="width:64px">Ölçü</span>${it.sizes.map((z,zi)=>`<button class="chip${c.size===zi?' on':''}" data-cz="${k}|${zi}">${z[0]}×${z[1]}</button>`).join('')}</div>
+    <div class="row" style="gap:6px;margin-top:6px;align-items:center"><span class="muted small" style="width:64px">Kalınlık</span>${it.ts.map(t=>`<button class="chip${c.ts.has(t)?' on':''}" data-ct="${k}|${t}">${fmt(t,t%1?1:0)} mm</button>`).join('')}<button class="chip ghost" data-call="${k}">tümü</button></div>`:''}</div>`;}).join('')}</div></div>`).join('')}
+  <div class="row" style="justify-content:flex-end;position:sticky;bottom:-22px;background:var(--surface);padding:12px 0 2px;border-top:1px solid var(--line)"><button class="btn" onclick="closeImp()">Vazgeç</button><button class="btn pri" id="catOk" ${n?'':'disabled'}>${n?n+' malzeme ekle':'Malzeme seç'}</button></div>`;
+  $$('#impBox [data-ck]').forEach(el=>el.onchange=()=>{const c=CSEL[el.dataset.ck];c.on=el.checked;if(c.on&&!c.ts.size){const it=catItem(el.dataset.ck);c.ts.add(it.ts.includes(18)?18:it.ts[Math.floor(it.ts.length/2)]);}renderCatalog();});
+  $$('#impBox [data-cz]').forEach(el=>el.onclick=()=>{const[k,z]=el.dataset.cz.split('|');CSEL[k].size=+z;renderCatalog();});
+  $$('#impBox [data-ct]').forEach(el=>el.onclick=()=>{const[k,t]=el.dataset.ct.split('|'),T2=CSEL[k].ts,v=+t;T2.has(v)?T2.delete(v):T2.add(v);renderCatalog();});
+  $$('#impBox [data-call]').forEach(el=>el.onclick=()=>{const k=el.dataset.call,it=catItem(k),T2=CSEL[k].ts;if(T2.size===it.ts.length)T2.clear();else it.ts.forEach(t=>T2.add(t));renderCatalog();});
+  const ok=$('#catOk');if(ok)ok.onclick=()=>{let added=0,skip=0;for(const[k,c]of Object.entries(CSEL)){if(!c.on)continue;const it=catItem(k),[w,h]=it.sizes[c.size];
+    for(const t of [...c.ts].sort((a,b)=>a-b)){if(S.materials.some(m=>m.name===it.name&&+m.t===t&&+m.w===w&&+m.h===h)){skip++;continue;}S.materials.push({id:uid(),name:it.name,t,w,h,price:0,cut:0,grain:it.grain,cat:it.cat});added++;}}
+    closeImp();changed();renderMats();renderParts();toast(`${added} malzeme eklendi${skip?`, ${skip} tanesi zaten vardı`:''}. Fiyatlarını girmeyi unutma.`);};
+}
+$('#btnCat').onclick=openCatalog;
+
+/* ---------- YERLEŞİM ---------- */
+function computeNest(){
+  const st=S.settings,m=+st.margin||0,g=+st.gap||0;const groups=[],orphans=[];
+  const byMat=new Map();for(const p of S.parts){if(!(p.qty>0))continue;if(!matById(p.mat)){orphans.push(p);continue;}if(!byMat.has(p.mat))byMat.set(p.mat,[]);byMat.get(p.mat).push(p);}
+  for(const mat of S.materials){const ps=byMat.get(mat.id);if(!ps)continue;
+    if(mat.w-2*m<=0||mat.h-2*m<=0){groups.push({mat,parts:ps,res:{sheets:[],unplaced:ps.flatMap(p=>Array(p.qty).fill({ref:p}))}});continue;}
+    for(const p of ps)p._rot=canRot(p);const res=nestGroup(ps,mat,m,g);const cutMm=ps.reduce((s,p)=>s+p.perim*p.qty,0);
+    groups.push({mat,parts:ps,res,cutM:cutMm/1000,count:ps.reduce((s,p)=>s+p.qty,0)});}
+  R={groups,orphans,margin:m};dirty=false;
+}
+function sheetSVG(g,sh){const mat=g.mat,M=R.margin,W=mat.w,H=mat.h;let parts='',labels='';
+  for(const q of sh.placed){const L=placedLoops(q,M),pc=partColor(q.ref.id);parts+=`<path d="${pathD(L)}" fill="${pc.f}" stroke="${pc.s}" stroke-width="1" vector-effect="non-scaling-stroke" fill-rule="evenodd"/>`;
+    const pw=q.w-(+S.settings.gap||0),ph=q.h-(+S.settings.gap||0),fs=Math.min(pw/ Math.max(4,(q.ref.name||'').length*0.62),ph/2.4,W/22);
+    if(fs>W/120){const cx=M+q.x+pw/2,cy=H-(M+q.y+ph/2);labels+=`<text x="${cx}" y="${cy}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle" fill="#13202c">${esc(q.ref.name)}</text>`;}}
+  return`<svg viewBox="0 0 ${W} ${H}">${mat.grain==='grain'?`<defs><pattern id="gr-${mat.id}" patternUnits="userSpaceOnUse" width="${W}" height="${H/40}"><rect width="${W}" height="${H/40}" style="fill:var(--sheet)"/><line x1="0" y1="${H/80}" x2="${W}" y2="${H/80}" stroke="rgba(120,90,50,.18)" stroke-width="${H/400}"/></pattern></defs>`:''}<g transform="translate(0,${H}) scale(1,-1)"><rect x="0" y="0" width="${W}" height="${H}" ${mat.grain==='grain'?`fill="url(#gr-${mat.id})"`:'style="fill:var(--sheet)"'} stroke="var(--sheetLine)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>${M>0?`<rect x="${M}" y="${M}" width="${W-2*M}" height="${H-2*M}" fill="none" stroke="var(--sheetLine)" opacity=".6" stroke-dasharray="4 3" stroke-width="1" vector-effect="non-scaling-stroke"/>`:''}${parts}</g><g font-family="Inter,sans-serif" font-weight="600">${labels}</g></svg>`;}
+function renderNest(){
+  if(dirty||!R)computeNest();
+  let sheets=0,partA=0,sheetA=0,cnt=0;const msgs=[];
+  for(const g of R.groups){sheets+=g.res.sheets.length;sheetA+=g.res.sheets.length*g.mat.w*g.mat.h;partA+=g.res.sheets.reduce((s,x)=>s+x.partArea,0);cnt+=g.res.sheets.reduce((s,x)=>s+x.placed.length,0);
+    if(g.res.unplaced.length){const names=[...new Set(g.res.unplaced.map(u=>u.ref.name))];msgs.push(`<div class="err" style="margin-bottom:10px"><b>${esc(matLabel(g.mat))}</b>: ${g.res.unplaced.length} parça plakaya sığmıyor (${esc(names.join(', '))}). Daha büyük plaka seç ya da parçayı böl.</div>`);}}
+  if(R.orphans.length)msgs.push(`<div class="warn" style="margin-bottom:10px">Malzemesi seçilmemiş ${R.orphans.length} kalem var: ${esc(R.orphans.map(p=>p.name).join(', '))}. Parçalar sekmesinden malzeme seç.</div>`);
+  const use=sheetA?partA/sheetA*100:0;
+  $('#nestStats').innerHTML=`<div class="stat hl"><b>${sheets}</b><span>toplam plaka</span></div><div class="stat"><b>${cnt}</b><span>yerleşen parça</span></div><div class="stat"><b>%${fmt(use,1)}</b><span>malzeme kullanımı</span></div><div class="stat"><b>%${fmt(sheetA?100-use:0,1)}</b><span>fire</span></div><div class="stat"><b>${fmt(R.groups.reduce((s,g)=>s+(g.cutM||0),0),1)} m</b><span>toplam kesim boyu</span></div>`;
+  $('#nestMsgs').innerHTML=msgs.join('');
+  if(!R.groups.length){$('#nestOut').innerHTML='<p class="muted">Yerleştirilecek parça yok.</p>';return;}
+  $('#nestOut').innerHTML=R.groups.map(g=>{const n=g.res.sheets.length,pa=g.res.sheets.reduce((s,x)=>s+x.partArea,0),u=n?pa/(n*g.mat.w*g.mat.h)*100:0;
+    return`<div class="grp"><div class="grp-h"><span class="dot"></span><h3>${esc(g.mat.name)} · ${fmt(g.mat.t,g.mat.t%1?1:0)} mm</h3><span class="pill">${n} plaka</span><span class="pill cat-${matCat(g.mat)}">${CAT_NAME[matCat(g.mat)]}</span>${g.mat.grain==='grain'?'<span class="pill" style="background:#f3ead7;color:#6b4e16">su yönü ⟷ plaka boyu</span>':''}<span class="muted small">${g.mat.w}×${g.mat.h} mm · kullanım %${fmt(u,1)} · ${g.count||0} parça · kesim ${fmt(g.cutM||0,1)} m</span></div>
+    <div class="sheets">${g.res.sheets.map((sh,i)=>`<div class="sheet"><div class="sh"><span><b>Plaka ${i+1}</b> / ${n}</span><span>${sh.placed.length} parça · <b>%${fmt(sh.partArea/(g.mat.w*g.mat.h)*100,1)}</b> dolu</span></div>${sheetSVG(g,sh)}<div class="bar"><i style="width:${Math.min(100,sh.partArea/(g.mat.w*g.mat.h)*100).toFixed(1)}%"></i></div></div>`).join('')}</div></div>`;}).join('');
+}
+const fileSafe=s=>asciiTR(s).replace(/[^A-Za-z0-9._-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+$('#btnZip').onclick=()=>{if(dirty||!R)computeNest();const files=[];
+  for(const g of R.groups)g.res.sheets.forEach((sh,i)=>files.push({name:`${fileSafe(g.mat.name)}_${g.mat.t}mm_plaka${String(i+1).padStart(2,'0')}.dxf`,data:dxfSheet(g.mat,sh,R.margin)}));
+  if(!files.length){toast('İndirilecek plaka yok.');return;}
+  files.unshift({name:`TUM_PLAKALAR_${fileSafe(S.settings.project||'proje')||'proje'}.dxf`,data:dxfAll()});
+  files.push({name:'OKUBENI.txt',data:'TUM_PLAKALAR dosyasi butun plakalari yan yana icerir; digerleri her plaka icin ayri DXF dosyasidir (birim: mm). AutoCAD, Rhino ve CAM programlari dogrudan acar.\r\nKatmanlar: PLAKA = plaka siniri, PARCA_DIS = dis kontur, PARCA_IC = delikler (once kesilmeli), ETIKET = parca adlari.\r\n'});
+  saveFile(`nesting_${fileSafe(S.settings.project||'proje')||'proje'}.zip`,makeZip(files));};
+
+/* ---------- TEKLİF ---------- */
+function computeQuote(){
+  if(dirty||!R)computeNest();const st=S.settings,lines=[];
+  for(const g of R.groups){const n=g.res.sheets.length;if(!n)continue;let q=n;if(st.remnant==='used'){q=(n-1)+Math.min(1,g.res.sheets[n-1].rectFrac);q=Math.round(q*100)/100;}
+    lines.push({k:'mat',desc:`${g.mat.name} ${fmt(g.mat.t,g.mat.t%1?1:0)} mm plaka (${g.mat.w}×${g.mat.h} mm)`,qty:q,unit:'adet',price:+g.mat.price||0});}
+  for(const g of R.groups){if(!g.res.sheets.length||!(+g.mat.cut))continue;lines.push({k:'cut',desc:`CNC kesim · ${g.mat.name} ${fmt(g.mat.t,g.mat.t%1?1:0)} mm`,qty:Math.round(g.cutM*10)/10,unit:'m',price:+g.mat.cut});}
+  const nParts=R.groups.reduce((s,g)=>s+g.res.sheets.reduce((t,x)=>t+x.placed.length,0),0);
+  if(+st.perPart>0&&nParts)lines.push({k:'op',desc:'Parça işleme / etiketleme',qty:nParts,unit:'adet',price:+st.perPart});
+  if(+st.laborH>0)lines.push({k:'lab',desc:'İşçilik',qty:+st.laborH,unit:'saat',price:+st.laborRate||0});
+  for(const x of S.extras)if(+x.amount)lines.push({k:'ext',desc:x.name||'Ek kalem',qty:1,unit:'',price:+x.amount});
+  for(const l of lines)l.total=l.qty*l.price;
+  const cost=lines.reduce((s,l)=>s+l.total,0),pf=(+st.profit||0)/100,net=cost*(1+pf),vat=net*(+st.vat||0)/100;
+  return{lines,cost,profit:cost*pf,net,vat,total:net+vat,pf,nParts,sheets:R.groups.reduce((s,g)=>s+g.res.sheets.length,0)};
+}
+function addDays(n){const d=new Date();d.setDate(d.getDate()+(+n||0));return d.toLocaleDateString('tr-TR');}
+function quoteDoc(q){const st=S.settings,c=CUR[st.currency];const m=n=>fmt(n)+' '+c;
+  const T=THEMES[THEME];return`<div class="qdoc" style="--qa:${T.acc};--qs:${T.soft}"><div class="qh"><div>${st.logo?`<img class="qlogo" src="${st.logo}" alt="">`:''}<div class="co">${esc(st.company||'Firma adı')}</div><div style="color:#5b6b7a;font-size:12px;margin-top:2px">${esc(st.project||'')}</div></div><div style="text-align:right"><h1>FİYAT TEKLİFİ</h1><div class="meta" style="margin-top:6px"><span>Teklif no</span><span>${esc(st.quoteNo||'')}</span><span>Tarih</span><span>${new Date().toLocaleDateString('tr-TR')}</span><span>Geçerlilik</span><span>${addDays(st.validity)}</span></div></div></div>
+  <div style="margin-bottom:6px"><span style="color:#5b6b7a">Sayın</span> <b>${esc(st.customer||'Müşteri')}</b>,</div><div style="color:#5b6b7a;margin-bottom:6px">Talebiniz doğrultusunda hazırlanan fiyat teklifimiz aşağıdadır.</div>
+  <table><thead><tr><th style="width:28px">#</th><th>Açıklama</th><th class="r">Miktar</th><th class="r">Birim fiyat</th><th class="r">Tutar</th></tr></thead><tbody>${
+   q.lines.map((l,i)=>`<tr><td>${i+1}</td><td>${esc(l.desc)}</td><td class="r">${l.unit?fmt(l.qty,l.qty%1?2:0)+' '+l.unit:''}</td><td class="r">${l.unit?m(l.price*(1+q.pf)):''}</td><td class="r">${m(l.total*(1+q.pf))}</td></tr>`).join('')||'<tr><td colspan="5" style="color:#5b6b7a">Kalem yok</td></tr>'}</tbody></table>
+  <table class="tots"><tr><td>Ara toplam</td><td class="r">${m(q.net)}</td></tr><tr><td>KDV (%${fmt(+st.vat||0,0)})</td><td class="r">${m(q.vat)}</td></tr><tr class="gt"><td>Genel toplam</td><td class="r">${m(q.total)}</td></tr></table>
+  <div class="foot">Toplam ${q.nParts} parça, ${q.sheets} plaka.${st.notes?'\n\n'+esc(st.notes):''}</div></div>`;}
+function renderExtras(){
+  $('#extrasTbl').innerHTML=S.extras.length?`<div class="tbl"><table style="min-width:0"><tbody>${S.extras.map(x=>`<tr><td><input type="text" data-c="extras" data-id="${x.id}" data-f="name" value="${esc(x.name)}"></td><td style="width:140px"><input type="number" step="any" data-c="extras" data-id="${x.id}" data-f="amount" value="${x.amount}" style="width:110px"></td><td style="width:40px"><button class="btn del" data-delx="${x.id}">✕</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted small" style="margin:0">Ek kalem yok.</p>';}
+function renderQuote(){
+  $$('.cur').forEach(e=>e.textContent=CUR[S.settings.currency]);
+  const q=computeQuote();
+  const np=R.groups.filter(g=>g.res.sheets.length&&!(+g.mat.price)).map(g=>matLabel(g.mat));
+  $('#internal').innerHTML=(np.length?`<div class="warn" style="margin-bottom:10px">Plaka fiyatı girilmemiş: ${esc(np.join(', '))}. Malzemeler sekmesinden fiyat gir.</div>`:'')+`<table class="kv">${q.lines.map(l=>`<tr><td>${esc(l.desc)}<div class="muted small">${l.unit?fmt(l.qty,l.qty%1?2:0)+' '+l.unit+' × '+money(l.price):''}</div></td><td class="num">${money(l.total)}</td></tr>`).join('')}
+   <tr class="sub"><td>Maliyet toplamı</td><td class="num">${money(q.cost)}</td></tr><tr><td>Kâr (%${fmt(+S.settings.profit||0,1)})</td><td class="num">${money(q.profit)}</td></tr><tr><td>KDV</td><td class="num">${money(q.vat)}</td></tr><tr class="tot"><td>Müşteriye toplam</td><td class="num">${money(q.total)}</td></tr></table>`;
+  $('#quotePrev').innerHTML=quoteDoc(q);
+}
+$('#btnAddExtra').onclick=()=>{S.extras.push({id:uid(),name:'',amount:0});changed();renderExtras();renderQuote();};
+/* ---- PDF: teklif canvas'a çizilir, sayfalar JPEG olarak PDF'e gömülür (dış kütüphane yok) ---- */
+function jpegPdf(pages){ // pages: [{bytes:Uint8Array,w,h}] A4
+  const enc=new TextEncoder(),chunks=[],offs=[];let pos=0;
+  const add=x=>{const b=typeof x==='string'?enc.encode(x):x;chunks.push(b);pos+=b.length;};
+  const obj=(n,body)=>{offs[n]=pos;add(`${n} 0 obj\n`);for(const b of body)add(b);add('\nendobj\n');};
+  add('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  const n=pages.length,kids=pages.map((_,i)=>`${3+i*3} 0 R`).join(' ');
+  obj(1,['<< /Type /Catalog /Pages 2 0 R >>']);obj(2,[`<< /Type /Pages /Kids [${kids}] /Count ${n} >>`]);
+  pages.forEach((p,i)=>{const W=p.pw||595.28,H=p.ph||841.89,po=3+i*3,co=po+1,io=po+2,cs=`q ${W} 0 0 ${H} 0 0 cm /Im${i} Do Q`;
+    obj(po,[`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /XObject << /Im${i} ${io} 0 R >> >> /Contents ${co} 0 R >>`]);
+    obj(co,[`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`]);
+    obj(io,[`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.bytes.length} >>\nstream\n`,p.bytes,'\nendstream']);});
+  const total=3+n*3,xref=pos;let x=`xref\n0 ${total}\n0000000000 65535 f \n`;for(let k=1;k<total;k++)x+=String(offs[k]).padStart(10,'0')+' 00000 n \n';
+  add(x+`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  const out=new Uint8Array(pos);let p=0;for(const c of chunks){out.set(c,p);p+=c.length;}return out;
+}
+async function quotePages(q){
+  try{await Promise.all(['400','600','700'].map(w=>document.fonts.load(`${w} 12px Inter`)));}catch(_){}
+  const st=S.settings,T=THEMES[THEME],c=CUR[st.currency],m=n=>fmt(n)+' '+c,K=2.5,PW=595.28,PH=841.89,MG=42,CW=PW-2*MG;
+  const pages=[];let ctx,y;
+  const F=(w,sz)=>`${w} ${sz*K}px Inter, system-ui, sans-serif`;
+  const newPage=()=>{const cv=document.createElement('canvas');cv.width=Math.round(PW*K);cv.height=Math.round(PH*K);ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);ctx.textBaseline='alphabetic';pages.push(cv);y=MG;};
+  const txt=(t,x,yy,{w='400',sz=10,col='#13202c',al='left'}={})=>{ctx.font=F(w,sz);ctx.fillStyle=col;ctx.textAlign=al;ctx.fillText(String(t),x*K,yy*K);};
+  const line=(x1,y1,x2,y2,col,lw=0.6)=>{ctx.strokeStyle=col;ctx.lineWidth=lw*K;ctx.beginPath();ctx.moveTo(x1*K,y1*K);ctx.lineTo(x2*K,y2*K);ctx.stroke();};
+  const rect=(x,yy,w,h,col)=>{ctx.fillStyle=col;ctx.fillRect(x*K,yy*K,w*K,h*K);};
+  const wrap=(t,maxW,w,sz)=>{ctx.font=F(w,sz);const out=[];for(const para of String(t).split('\n')){let cur='';for(const word of para.split(' ')){const tryS=cur?cur+' '+word:word;if(ctx.measureText(tryS).width/K>maxW&&cur){out.push(cur);cur=word;}else cur=tryS;}out.push(cur);}return out;};
+  newPage();const logo=await logoImg();
+  // başlık
+  let lo=0;if(logo){const[w,h]=fitBox(logo,170,46);ctx.drawImage(logo,MG*K,y*K,w*K,h*K);lo=h+8;}
+  txt(st.company||'Firma adı',MG,y+lo+14,{w:'700',sz:16});
+  if(st.project)txt(st.project,MG,y+lo+30,{sz:9.5,col:'#5b6b7a'});
+  txt('FİYAT TEKLİFİ',PW-MG,y+16,{w:'700',sz:19,col:T.acc,al:'right'});
+  const meta=[['Teklif no',st.quoteNo||''],['Tarih',new Date().toLocaleDateString('tr-TR')],['Geçerlilik',addDays(st.validity)]];
+  meta.forEach(([a,b],i)=>{txt(b,PW-MG,y+34+i*13,{sz:9.5,al:'right'});ctx.font=F('400',9.5);const bw=ctx.measureText(String(b)).width/K;txt(a,PW-MG-bw-12,y+34+i*13,{sz:9.5,col:'#5b6b7a',al:'right'});});
+  y+=Math.max(34+3*13,lo+(st.project?34:20))+6;line(MG,y,PW-MG,y,T.acc,2.2);y+=24;
+  txt('Sayın',MG,y,{sz:10.5,col:'#5b6b7a'});ctx.font=F('400',10.5);const sw=ctx.measureText('Sayın ').width/K;txt((st.customer||'Müşteri')+',',MG+sw,y,{w:'700',sz:10.5});y+=16;
+  txt('Talebiniz doğrultusunda hazırlanan fiyat teklifimiz aşağıdadır.',MG,y,{sz:10,col:'#5b6b7a'});y+=16;
+  // tablo
+  const cols=[{t:'#',w:22},{t:'AÇIKLAMA',w:CW-22-78-88-92},{t:'MİKTAR',w:78,r:1},{t:'BİRİM FİYAT',w:88,r:1},{t:'TUTAR',w:92,r:1}];
+  const head=()=>{rect(MG,y,CW,22,T.soft);let x=MG;cols.forEach(cl=>{txt(cl.t,cl.r?x+cl.w-6:x+6,y+14.5,{w:'600',sz:7.8,col:'#3a4a58',al:cl.r?'right':'left'});x+=cl.w;});y+=22;};
+  head();
+  q.lines.forEach((l,i)=>{const dl=wrap(l.desc,cols[1].w-12,'400',9.6),rh=Math.max(1,dl.length)*12.5+11;
+    if(y+rh>PH-MG-20){newPage();head();}
+    const by=y+15.5;let x=MG;txt(i+1,x+6,by,{sz:9.6,col:'#5b6b7a'});x+=cols[0].w;
+    dl.forEach((d,k)=>txt(d,x+6,by+k*12.5,{sz:9.6}));x+=cols[1].w;
+    if(l.unit){txt(fmt(l.qty,l.qty%1?2:0)+' '+l.unit,x+cols[2].w-6,by,{sz:9.6,al:'right'});txt(m(l.price*(1+q.pf)),x+cols[2].w+cols[3].w-6,by,{sz:9.6,al:'right'});}
+    txt(m(l.total*(1+q.pf)),MG+CW-6,by,{w:'600',sz:9.6,al:'right'});
+    y+=rh;line(MG,y,MG+CW,y,'#e3e8ec');});
+  // toplamlar
+  if(y+90>PH-MG)newPage();y+=18;const tx=PW-MG-240;
+  txt('Ara toplam',tx,y,{sz:10});txt(m(q.net),PW-MG-6,y,{sz:10,al:'right'});y+=17;
+  txt(`KDV (%${fmt(+st.vat||0,0)})`,tx,y,{sz:10});txt(m(q.vat),PW-MG-6,y,{sz:10,al:'right'});y+=10;
+  line(tx,y,PW-MG,y,T.acc,1.6);y+=18;
+  txt('Genel toplam',tx,y,{w:'700',sz:12.5,col:T.acc});txt(m(q.total),PW-MG-6,y,{w:'700',sz:12.5,col:T.acc,al:'right'});y+=30;
+  // notlar
+  const notes=wrap(`Toplam ${q.nParts} parça, ${q.sheets} plaka.`+(st.notes?'\n\n'+st.notes:''),CW,'400',9.2);
+  for(const nl of notes){if(y>PH-MG-16){newPage();}txt(nl,MG,y,{sz:9.2,col:'#5b6b7a'});y+=13;}
+  // sayfa no
+  pages.forEach((cv,i)=>{ctx=cv.getContext('2d');txt(`${st.quoteNo||''}  ·  Sayfa ${i+1} / ${pages.length}`,PW-MG,PH-22,{sz:8,col:'#9aa6b2',al:'right'});});
+  return pages;
+}
+function canvasesToPdf(cvs,pw,ph){const pages=cvs.map(cv=>{const b64=cv.toDataURL('image/jpeg',0.9).split(',')[1],bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return{bytes:u,w:cv.width,h:cv.height,pw,ph};});return jpegPdf(pages);}
+async function makePdf(){return canvasesToPdf(await quotePages(computeQuote()),595.28,841.89);}
+let LOGO_IMG=null;
+async function logoImg(){const src=S.settings.logo;if(!src)return null;if(LOGO_IMG&&LOGO_IMG.src===src)return LOGO_IMG;const im=new Image();im.src=src;try{await im.decode();}catch(_){return null;}LOGO_IMG=im;return im;}
+function fitBox(im,maxW,maxH){const r=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight,1e9);return[im.naturalWidth*r,im.naturalHeight*r];}
+async function layoutPages(){
+  if(dirty||!R)computeNest();
+  try{await Promise.all(['400','600','700'].map(w=>document.fonts.load(`${w} 12px Inter`)));}catch(_){}
+  const st=S.settings,T=THEMES[THEME],K=2.2,PW=841.89,PH=595.28,MG=34,logo=await logoImg(),pages=[];let ctx;
+  const F=(w,sz)=>`${w} ${sz*K}px Inter, system-ui, sans-serif`;
+  const newPage=()=>{const cv=document.createElement('canvas');cv.width=Math.round(PW*K);cv.height=Math.round(PH*K);ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);pages.push(cv);};
+  const txt=(t,x,y,{w='400',sz=10,col='#13202c',al='left'}={})=>{ctx.font=F(w,sz);ctx.fillStyle=col;ctx.textAlign=al;ctx.fillText(String(t),x*K,y*K);};
+  const line=(x1,y1,x2,y2,col,lw=0.6)=>{ctx.strokeStyle=col;ctx.lineWidth=lw*K;ctx.beginPath();ctx.moveTo(x1*K,y1*K);ctx.lineTo(x2*K,y2*K);ctx.stroke();};
+  const rrect=(x,y,w,h,r,fill,stroke)=>{ctx.beginPath();ctx.roundRect(x*K,y*K,w*K,h*K,r*K);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=0.8*K;ctx.stroke();}};
+  const fitTxt=(t,maxW,w,sz)=>{ctx.font=F(w,sz);let s2=String(t);if(ctx.measureText(s2).width/K<=maxW)return s2;while(s2.length>1&&ctx.measureText(s2+'…').width/K>maxW)s2=s2.slice(0,-1);return s2+'…';};
+  const header=(title,sub)=>{let x=MG;if(logo){const[w,h]=fitBox(logo,120,30);ctx.drawImage(logo,MG*K,(MG-4)*K,w*K,h*K);x=MG+w+12;}
+    txt(title,x,MG+10,{w:'700',sz:14});if(sub)txt(sub,x,MG+24,{sz:9,col:'#5b6b7a'});
+    txt(st.company||'',PW-MG,MG+10,{w:'600',sz:10,al:'right'});txt([st.project,new Date().toLocaleDateString('tr-TR')].filter(Boolean).join(' · '),PW-MG,MG+24,{sz:9,col:'#5b6b7a',al:'right'});
+    line(MG,MG+34,PW-MG,MG+34,T.acc,1.6);};
+  // kapak
+  newPage();header('Plaka Yerleşim Raporu',st.customer?('Müşteri: '+st.customer):'');
+  let sheets=0,partA=0,sheetA=0,cnt=0,cut=0;for(const g of R.groups){sheets+=g.res.sheets.length;sheetA+=g.res.sheets.length*g.mat.w*g.mat.h;partA+=g.res.sheets.reduce((s2,x)=>s2+x.partArea,0);cnt+=g.res.sheets.reduce((s2,x)=>s2+x.placed.length,0);cut+=g.cutM||0;}
+  const use=sheetA?partA/sheetA*100:0,stats=[[String(sheets),'toplam plaka'],[String(cnt),'parça'],['%'+fmt(use,1),'malzeme kullanımı'],['%'+fmt(sheetA?100-use:0,1),'fire'],[fmt(cut,1)+' m','kesim boyu']];
+  const cw=(PW-2*MG-4*12)/5;stats.forEach(([v,l],i)=>{const x=MG+i*(cw+12),y=MG+54;rrect(x,y,cw,58,8,i?T.soft:T.acc);txt(v,x+14,y+30,{w:'700',sz:20,col:i?'#13202c':'#fff'});txt(l,x+14,y+46,{sz:9,col:i?'#5b6b7a':'rgba(255,255,255,.85)'});});
+  let y=MG+140;const cols=[['MALZEME',250],['KALINLIK',70],['PLAKA ÖLÇÜSÜ',110],['PLAKA',60],['PARÇA',60],['KULLANIM',80],['KESİM',PW-2*MG-630]];
+  rrect(MG,y,PW-2*MG,22,4,T.soft);let x=MG;cols.forEach(([t,w],i)=>{txt(t,i?x+w-8:x+8,y+14.5,{w:'600',sz:7.8,col:'#3a4a58',al:i?'right':'left'});x+=w;});y+=22;
+  for(const g of R.groups){const n=g.res.sheets.length,pa=g.res.sheets.reduce((s2,q)=>s2+q.partArea,0),u=n?pa/(n*g.mat.w*g.mat.h)*100:0;
+    const vals=[g.mat.name,fmt(g.mat.t,g.mat.t%1?1:0)+' mm',g.mat.w+'×'+g.mat.h,String(n),String(g.count||0),'%'+fmt(u,1),fmt(g.cutM||0,1)+' m'];x=MG;
+    vals.forEach((v,i)=>{const w=cols[i][1];txt(i?v:fitTxt(v,w-16,'600',9.5),i?x+w-8:x+8,y+16,{w:i?'400':'600',sz:9.5,al:i?'right':'left'});x+=w;});y+=24;line(MG,y,PW-MG,y,'#e3e8ec');
+    if(y>PH-MG-30)break;}
+  const un=R.groups.reduce((s2,g)=>s2+g.res.unplaced.length,0);if(un){y+=20;txt(`Uyarı: ${un} parça plakaya sığmadı.`,MG,y,{w:'600',sz:9.5,col:'#b42318'});}
+  // plakalar
+  for(const g of R.groups){const n=g.res.sheets.length,mat=g.mat;g.res.sheets.forEach((sh,si)=>{newPage();
+    header(`${mat.name} · ${fmt(mat.t,mat.t%1?1:0)} mm`,`Plaka ${si+1} / ${n}  ·  ${mat.w}×${mat.h} mm  ·  %${fmt(sh.partArea/(mat.w*mat.h)*100,1)} dolu${mat.grain==='grain'?'  ·  su yönü ⟷ plaka boyu':''}`);
+    const LW=200,ax=MG,ay=MG+50,aw=PW-2*MG-LW-20,ah=PH-ay-MG-10,k=Math.min(aw/mat.w,ah/mat.h),dw=mat.w*k,dh=mat.h*k,ox=ax+(aw-dw)/2,oy=ay+(ah-dh)/2;
+    const P=(px,py)=>[(ox+px*k)*K,(oy+(mat.h-py)*k)*K];
+    rrect(ox,oy,dw,dh,0,THEME==='wood'?'#f4e7d3':'#f6f8fa','#9aa6b2');
+    if(mat.grain==='grain'){ctx.strokeStyle='rgba(120,90,50,.16)';ctx.lineWidth=0.5*K;for(let gy=oy+4;gy<oy+dh;gy+=5){ctx.beginPath();ctx.moveTo(ox*K,gy*K);ctx.lineTo((ox+dw)*K,gy*K);ctx.stroke();}}
+    if(R.margin>0){ctx.setLineDash([3*K,2*K]);ctx.strokeStyle='#b5bec8';ctx.lineWidth=0.5*K;ctx.strokeRect((ox+R.margin*k)*K,(oy+R.margin*k)*K,(dw-2*R.margin*k)*K,(dh-2*R.margin*k)*K);ctx.setLineDash([]);}
+    const counts=new Map();
+    for(const q of sh.placed){const L=placedLoops(q,R.margin),pc=partColor(q.ref.id);ctx.beginPath();for(const l of L){l.forEach((pt,ii)=>{const[a,b]=P(pt[0],pt[1]);ii?ctx.lineTo(a,b):ctx.moveTo(a,b);});ctx.closePath();}
+      ctx.fillStyle=pc.f;ctx.fill('evenodd');ctx.strokeStyle=pc.s;ctx.lineWidth=0.7*K;ctx.stroke();
+      const c0=counts.get(q.ref.id)||{p:q.ref,n:0};c0.n++;counts.set(q.ref.id,c0);
+      const pw=(q.w-(+st.gap||0))*k,ph=(q.h-(+st.gap||0))*k,fs=Math.min(9,pw/Math.max(3,(q.ref.name||'').length*0.6),ph/2.2);
+      if(fs>=4.5){const cx=ox+(R.margin+q.x)*k+pw/2,cy=oy+dh-(R.margin+q.y)*k-ph/2;ctx.textBaseline='middle';txt(q.ref.name,cx,cy,{w:'600',sz:fs,al:'center'});ctx.textBaseline='alphabetic';}}
+    // ölçü yazıları
+    txt(mat.w+' mm',ox+dw/2,oy+dh+12,{sz:8,col:'#5b6b7a',al:'center'});
+    ctx.save();ctx.translate((ox-8)*K,(oy+dh/2)*K);ctx.rotate(-Math.PI/2);ctx.font=F('400',8);ctx.fillStyle='#5b6b7a';ctx.textAlign='center';ctx.fillText(mat.h+' mm',0,0);ctx.restore();
+    // parça listesi
+    const lx=PW-MG-LW;let ly=ay;rrect(lx,ly,LW,22,4,T.soft);txt('PARÇALAR',lx+8,ly+14.5,{w:'600',sz:7.8,col:'#3a4a58'});txt('ADET',lx+LW-8,ly+14.5,{w:'600',sz:7.8,col:'#3a4a58',al:'right'});ly+=22;
+    const rows=[...counts.values()];for(let ri=0;ri<rows.length;ri++){const r=rows[ri];if(ly>PH-MG-24){txt(`+${rows.length-ri} kalem daha`,lx+8,ly+14,{sz:8.5,col:'#5b6b7a'});break;}
+      const pc=partColor(r.p.id);rrect(lx+8,ly+7,9,9,2,pc.f,pc.s);txt(fitTxt(r.p.name,LW-70,'600',8.8),lx+22,ly+14.5,{w:'600',sz:8.8});txt(`${fmt(r.p.w,0)}×${fmt(r.p.h,0)} mm`,lx+22,ly+25,{sz:7.6,col:'#5b6b7a'});txt('×'+r.n,lx+LW-8,ly+18,{w:'700',sz:10,al:'right'});ly+=32;line(lx,ly,lx+LW,ly,'#e3e8ec');}
+  });}
+  pages.forEach((cv,i)=>{ctx=cv.getContext('2d');txt(`Sayfa ${i+1} / ${pages.length}`,PW-MG,PH-14,{sz:7.5,col:'#9aa6b2',al:'right'});});
+  return pages;
+}
+$('#btnLayPdf').onclick=async()=>{const b=$('#btnLayPdf'),t=b.textContent;if(!(R&&R.groups.some(g=>g.res.sheets.length))&&(computeNest(),!R.groups.some(g=>g.res.sheets.length))){toast('Yerleştirilecek parça yok.');return;}
+  b.disabled=true;b.textContent='Hazırlanıyor…';
+  try{const buf=canvasesToPdf(await layoutPages(),841.89,595.28);await saveFile(`Yerlesim_${fileSafe(S.settings.project||'proje')||'proje'}.pdf`,new Blob([buf],{type:'application/pdf'}));}
+  catch(e){toast('PDF oluşturulamadı: '+(e.message||e));}finally{b.disabled=false;b.textContent=t;}};
+$('#btnPdf').onclick=async()=>{const b=$('#btnPdf'),t=b.textContent;b.disabled=true;b.textContent='Hazırlanıyor…';
+  try{const buf=await makePdf();await saveFile(`Teklif_${fileSafe(S.settings.quoteNo||'teklif')}.pdf`,new Blob([buf],{type:'application/pdf'}));}
+  catch(e){toast('PDF oluşturulamadı: '+(e.message||e));}finally{b.disabled=false;b.textContent=t;}};
+$('#btnCopyQ').onclick=async()=>{const q=computeQuote(),st=S.settings,c=CUR[st.currency];const t=[`FİYAT TEKLİFİ – ${st.quoteNo}`,`${st.company||''}`,`Müşteri: ${st.customer||''}`,`Proje: ${st.project||''}`,'',...q.lines.map((l,i)=>`${i+1}. ${l.desc}${l.unit?` – ${fmt(l.qty,l.qty%1?2:0)} ${l.unit}`:''}: ${fmt(l.total*(1+q.pf))} ${c}`),'',`Ara toplam: ${fmt(q.net)} ${c}`,`KDV: ${fmt(q.vat)} ${c}`,`Genel toplam: ${fmt(q.total)} ${c}`,`Geçerlilik: ${addDays(st.validity)}`].join('\n');
+  try{await navigator.clipboard.writeText(t);toast('Teklif metni kopyalandı.');}catch(e){toast('Kopyalanamadı.');}};
+
+/* ---------- DXF İÇE AKTARMA ---------- */
+let IMP=null;
+$('#fileDxf').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';if(fs.length)handleFiles(fs);});
+async function handleFiles(fs){
+  const bad=fs.filter(f=>!/\.dxf$/i.test(f.name));if(bad.length){showBadFormat(bad.map(f=>f.name));}
+  const good=fs.filter(f=>/\.dxf$/i.test(f.name));if(!good.length)return;
+  const texts=await Promise.all(good.map(f=>f.text()));IMP={files:good.map((f,i)=>({name:f.name.replace(/\.dxf$/i,''),text:texts[i]})),scale:0,autoRot:true,merge:true,layerMat:{},qtyMul:1};runImport();}
+(()=>{const dz=$('#dropZone');['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over');}));['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('over');}));dz.addEventListener('drop',e=>{const fs=[...(e.dataTransfer?.files||[])];if(fs.length)handleFiles(fs);});})();
+function showBadFormat(names){$('#impBox').innerHTML=`<h2>Bu dosyalar doğrudan okunamıyor</h2><p class="muted">${esc(names.join(', '))}</p><div class="note">DWG ve 3DM kapalı formatlar, tarayıcıda okunamıyor. Rhino 7/8'de:<br>1. Kesilecek eğrileri seç<br>2. <b>File › Export Selected</b><br>3. Dosya türü: <b>AutoCAD Drawing Exchange (*.dxf)</b><br>4. Export şeması: <b>R12 Lines &amp; Arcs</b> ya da <b>2007 Natural</b> (ikisi de olur)<br>Sonra oluşan .dxf dosyasını buraya yükle.</div><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn pri" onclick="closeImp()">Tamam</button></div>`;$('#impOv').classList.add('on');}
+function closeImp(){$('#impOv').classList.remove('on');IMP=null;}
+function runImport(){
+  const res=[];for(const f of IMP.files){try{const r=processDXF(f.text,{scale:IMP.scale||0,autoRot:IMP.autoRot,merge:IMP.merge});r.parts.forEach((p,i)=>p.name=`${f.name}-${i+1}`);res.push({file:f.name,...r});}catch(err){res.push({file:f.name,error:String(err)});}}
+  IMP.res=res;const parts=res.flatMap(r=>r.parts||[]);IMP.parts=parts;
+  const layers={};for(const p of parts)layers[p.layer]=(layers[p.layer]||0)+p.qty;
+  for(const L of Object.keys(layers))if(!(L in IMP.layerMat))IMP.layerMat[L]=guessMat(L);
+  const det=res.find(r=>!r.error);const unitTxt=det?(UNIT_NAME[det.units]?`dosyada ${UNIT_NAME[det.units]} yazıyor`:'dosyada birim yok, mm varsayıldı'):'';
+  const warns=[];for(const r of res){if(r.error)warns.push(`${r.file}: okunamadı (${r.error})`);else{if(r.dangling)warns.push(`${r.file}: ${r.dangling} açık eğri kapanmadı, atlandı.`);if(r.inserts)warns.push(`${r.file}: ${r.inserts} blok (INSERT) var, atlandı. Rhino'da Explode yapıp tekrar dışa aktar.`);}}
+  $('#impBox').innerHTML=`<h2>DXF içe aktarma</h2><p class="muted" style="margin:0 0 10px">${res.map(r=>esc(r.file)).join(', ')} · <b>${parts.reduce((s,p)=>s+p.qty,0)}</b> parça bulundu (${parts.length} farklı şekil)${unitTxt?' · '+unitTxt:''}</p>
+   ${warns.length?`<div class="warn" style="margin-bottom:10px">${warns.map(esc).join('<br>')}</div>`:''}
+   ${parts.length?'':'<div class="err">Kapalı eğri bulunamadı. Konturların kapalı olduğundan emin ol (Rhino: Join).</div>'}
+   <div class="row" style="margin-bottom:10px">
+    <div class="fld"><label>Çizim birimi</label><select id="impUnit"><option value="0">Dosyadan</option><option value="1">mm</option><option value="10">cm</option><option value="1000">m</option><option value="25.4">inç</option></select></div>
+    <div class="fld"><label>Her parçadan kaç takım?</label><input type="number" id="impMul" min="1" step="1" value="${IMP.qtyMul}" class="w-s"></div>
+    <label class="row small" style="gap:6px;align-items:center"><input type="checkbox" id="impRot" ${IMP.autoRot?'checked':''}> Parçaları en dar dikdörtgene döndür</label>
+    <label class="row small" style="gap:6px;align-items:center"><input type="checkbox" id="impMerge" ${IMP.merge?'checked':''}> Aynı parçaları adet olarak birleştir</label>
+   </div>
+   ${Object.keys(layers).length?`<div class="tbl" style="margin-bottom:6px"><table style="min-width:0"><thead><tr><th>Katman</th><th class="num">Parça</th><th>Malzeme / kalınlık</th></tr></thead><tbody>${Object.entries(layers).map(([L,n])=>`<tr><td>${esc(L)}</td><td class="num">${n}</td><td><select data-layer="${esc(L)}">${matOpts(IMP.layerMat[L])}</select></td></tr>`).join('')}</tbody></table></div>`:''}
+   <div class="thumbs">${parts.slice(0,80).map(p=>`<div>${thumbSVG(p,'')}${fmt(p.w,0)}×${fmt(p.h,0)}${p.qty>1?` · ${p.qty} ad.`:''}</div>`).join('')}</div>
+   <div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeImp()">Vazgeç</button><button class="btn pri" id="impOk" ${parts.length?'':'disabled'}>Parçaları ekle</button></div>`;
+  $('#impOv').classList.add('on');
+  $('#impUnit').value=String(IMP.scale||0);
+  $('#impUnit').onchange=e=>{IMP.scale=+e.target.value;runImport();};
+  $('#impRot').onchange=e=>{IMP.autoRot=e.target.checked;runImport();};
+  $('#impMerge').onchange=e=>{IMP.merge=e.target.checked;runImport();};
+  $('#impMul').onchange=e=>{IMP.qtyMul=Math.max(1,Math.floor(+e.target.value||1));};
+  $$('#impBox [data-layer]').forEach(s=>s.onchange=()=>{IMP.layerMat[s.dataset.layer]=s.value;});
+  $('#impOk').onclick=()=>{for(const p of IMP.parts)S.parts.push({id:uid(),name:p.name,w:p.w,h:p.h,qty:p.qty*IMP.qtyMul,mat:IMP.layerMat[p.layer]||S.materials[0]?.id,rotMode:'mat',area:p.area,perim:p.perim,loops:p.loops,layer:p.layer});
+    const n=IMP.parts.reduce((s,p)=>s+p.qty*IMP.qtyMul,0);S.sample=false;closeImp();changed();renderParts();toast(`${n} parça eklendi.`);};
+}
+function guessMat(layer){const m=String(layer).replace(',','.').match(/(\d+(?:\.\d+)?)\s*(mm)?/i);if(m){const t=+m[1];const hit=S.materials.find(x=>Math.abs(x.t-t)<1e-6);if(hit)return hit.id;}return S.materials[0]?.id;}
+$('#impOv').addEventListener('click',e=>{if(e.target.id==='impOv')closeImp();});
+
+/* ---------- proje kaydet / aç ---------- */
+$('#btnSaveProj').onclick=()=>saveFile(`${fileSafe(S.settings.project||'nesting_proje')||'nesting_proje'}.json`,JSON.stringify(S));
+$('#fileProj').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const s=JSON.parse(await f.text());if(!s.parts||!s.materials)throw 0;S=migrate(s);changed();refresh('all');toast('Proje açıldı.');}catch(err){toast('Bu dosya bir proje dosyası değil.');}});
+
+/* ---------- logo ---------- */
+function renderLogo(){const L=S.settings.logo;$('#logoBox').innerHTML=L?`<img src="${L}" alt="logo">`:'logo yok';$('#btnLogoDel').classList.toggle('hide',!L);
+  const bl=$('#brandLogo');if(L){bl.innerHTML=`<img src="${L}" alt="">`;bl.style.background='#fff';}else if(bl.dataset.svg){bl.innerHTML=bl.dataset.svg;bl.style.background='';}}
+$('#brandLogo').dataset.svg=$('#brandLogo').innerHTML;
+$('#fileLogo').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  const url=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(f);});
+  let out=url;try{const im=new Image();im.src=url;await im.decode();const w0=im.naturalWidth||600,h0=im.naturalHeight||200,sc=Math.min(1,600/w0,240/h0);const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(w0*sc));cv.height=Math.max(1,Math.round(h0*sc));cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);out=cv.toDataURL('image/png');}catch(_){}
+  S.settings.logo=out;LOGO_IMG=null;changed();renderLogo();renderQuote();toast('Logo eklendi.');});
+$('#btnLogoDel').onclick=()=>{delete S.settings.logo;LOGO_IMG=null;changed();renderLogo();renderQuote();};
+
+/* ---------- indirme ---------- */
+let DL=null;
+async function initDL(){try{for(let i=0;i<8&&!(window.claude&&typeof claude.use==='function');i++)await new Promise(r=>setTimeout(r,150));if(window.claude&&typeof claude.use==='function'){DL=await claude.use('downloads');}}catch(e){DL=null;}$$('.dlb').forEach(b=>b.title=DL?'':'Bu görünümde dosya indirme kullanılamıyor');}
+async function saveFile(name,data){if(!DL)await initDL();
+  if(!DL&&!window.claude){try{const blob=data instanceof Blob?data:new Blob([data]);const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return;}catch(_){}}
+  if(!DL){dlHelp();return;}
+  try{const r=await DL.save({filename:name,data});toast(r&&r.status==='delivered'?'Dosya gönderildi.':'Dosya indirildi: '+name);}
+  catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited'){toast('Bir indirme onayı zaten açık; onu tamamla.');return;}if(['unavailable','not_granted','capability_disabled','capability_removed'].includes(c)){dlHelp();return;}toast('İndirilemedi: '+((e&&(e.message||c))||'bilinmeyen hata'));}}
+function dlHelp(){$('#impBox').innerHTML=`<h2>Dosya bu görünümde indirilemiyor</h2><p class="muted">Bu sayfa şu an dosya indirmeye izin vermeyen bir pencerede açık.</p><div class="note">Uygulamayı <b>claude.ai</b> üzerinden bir tarayıcıda (Chrome, Safari, Edge) aç: Claude'da bu sayfanın kartına tıkla → sağ üstten <b>yeni sekmede aç</b>. İndirme düğmesine basınca çıkan onay penceresinde <b>İndir / Kaydet</b> de.</div><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn pri" onclick="closeImp()">Tamam</button></div>`;$('#impOv').classList.add('on');}
+
+/* ---------- sekmeler ---------- */
+let cur='parcalar';const TABS=['parcalar','malzemeler','yerlesim','teklif'];
+function show(t){if(!TABS.includes(t))t='parcalar';cur=t;$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));TABS.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==t));try{$(`#tabs button[data-tab=${t}]`).scrollIntoView({inline:'nearest',block:'nearest'});}catch(_){}refresh('all');window.scrollTo(0,0);}
+function fillSettings(){$$('[data-s]').forEach(el=>{const v=S.settings[el.dataset.s];if(document.activeElement!==el)el.value=v??'';});}
+function refresh(kind){S.extras=S.extras||[];applyTheme();
+  if(kind==='all'){fillSettings();renderParts();renderMats();renderExtras();renderLogo();}
+  if(kind==='mat'){renderParts();}
+  if(cur==='yerlesim')renderNest();
+  if(cur==='teklif')renderQuote();
+}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){try{history.replaceState(null,'','#'+b.dataset.tab);}catch(_){location.hash=b.dataset.tab;}show(b.dataset.tab);}});
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+show(location.hash.slice(1)||'parcalar');
+setTimeout(initDL,0);setTimeout(()=>{if(!DL)initDL();},1500);
+</script>
+</body>
+</html>
